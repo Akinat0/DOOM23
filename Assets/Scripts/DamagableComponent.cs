@@ -37,4 +37,16 @@ public class DamagableComponent : MonoBehaviour
         Debug.Log($"{gameObject.name} is dead");
         isDead = true;
     }
+
+    private void OnEnable()
+    {
+        EnemyManager.RegisterEnemy(this);
+    }
+
+    private void OnDisable()
+    {
+        EnemyManager.UnregisterEnemy(this);
+    }
+
+
 }

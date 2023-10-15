@@ -3,51 +3,49 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] float moveSpeed = 10;
-    [SerializeField] float rotationSpeed = 10;
-    
-    CharacterController controller;
+    [SerializeField] float speed = 10;
+    [SerializeField] float sensitivity = 10;
 
     Vector3 surfaceNormal;
-    float ySpeed;
 
-    public Vector3 ExternalVelocity { get; set; }
+    CharacterController characterController;
+    float verticalSpeed;
 
-    void Awake()
+    private void Awake()
     {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-        
-        controller = GetComponent<CharacterController>();
+        characterController = GetComponent<CharacterController>();
     }
-    
-    void Update()
+
+    private void Update()
     {
-        Vector3 rotation = new Vector3(0, Input.GetAxis("Mouse X") * rotationSpeed * Time.deltaTime, 0);
+        Vector3 rotation = new Vector3(0, Input.GetAxis("Mouse X") * sensitivity * Time.deltaTime);
         transform.Rotate(rotation);
-        
-        if (controller.isGrounded)
-            ySpeed = -0.1f;
+
+        if (characterController.isGrounded) 
+            verticalSpeed = -0.1f;
         else
-            ySpeed += Physics.gravity.y * Time.deltaTime;
+            verticalSpeed += Physics.gravity.y * Time.deltaTime;
         
+
         Vector3 input = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
         input = Vector3.ClampMagnitude(input, 1);
-        Vector3 velocity = transform.TransformDirection(input) * moveSpeed;
-        
-        Quaternion slopeRotation = Quaternion.FromToRotation(Vector3.up, surfaceNormal);
-        Vector3 surfaceAdjustedVelocity = slopeRotation * velocity;
-        
-        velocity = surfaceAdjustedVelocity.y < 0 ? surfaceAdjustedVelocity : velocity;
-        velocity += ExternalVelocity;
-        velocity.y += ySpeed;
 
-        controller.Move(velocity * Time.deltaTime);
+        Vector3 velocity = transform.TransformDirection(input) * speed;
+
+        Quaternion slopeRotation = Quaternion.FromToRotation(Vector3.up, surfaceNormal);
+        Vector3 adjustedVelocity = slopeRotation * velocity;
+
+        velocity = adjustedVelocity.y < 0 ? adjustedVelocity : velocity;
+
+        velocity.y += verticalSpeed;
+
+        characterController.Move(velocity * Time.deltaTime);
     }
 
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
+        Debug.DrawLine(hit.point, hit.point + hit.normal * 10, Color.red);
+
         surfaceNormal = hit.normal;
     }
 }
-
