@@ -19,15 +19,11 @@ public class ShooterController : MonoBehaviour
             float angleRad = Mathf.Acos(dot);
             float angleDeg = angleRad * Mathf.Rad2Deg;
             
-            // Debug.Log(angleDeg);
             Ray ray = new Ray(transform.position, enemyDirection);
-            
-            Debug.DrawRay(ray.origin, ray.direction, Color.red, 1, false);
             
             if (angleDeg >= precision)
                 continue;
             
-                
             if (Physics.Raycast(ray, out RaycastHit hit) 
                 && hit.collider.gameObject == enemy.gameObject)
             {
