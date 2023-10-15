@@ -43,7 +43,6 @@ public class PlayerShoot : MonoBehaviour
         if (Physics.Linecast(transform.position, targetPos, out RaycastHit hit)
                     && hit.collider.GetComponent<DamagableComponent>())
         {
-            Debug.DrawLine(transform.position, targetPos, Color.green);
             return true;
         }
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -9,12 +10,15 @@ public class Elevator : MonoBehaviour
     [SerializeField] Transform elevatorTransform;
 
     IEnumerator elevateRoutine;
+
+    bool isActive;
     
     void OnTriggerEnter(Collider other)
     {
         print("Trigger elevator");
         if (other.TryGetComponent(out PlayerController playerController) && elevateRoutine == null)
         {
+            // isActive = true;
             StartCoroutine(elevateRoutine = ElevateRoutine(playerController));
         }
     }
@@ -23,24 +27,27 @@ public class Elevator : MonoBehaviour
     {
         float duration = height / speed;
         float time = 0;
-
-        playerController.ExternalVelocity += Vector3.up * speed;  
-
+    
+        playerController.ExternalVelocity += Vector3.up * speed;
+        playerController.GetComponent<CharacterController>().enableOverlapRecovery = false;
+    
         while (time < duration)
         {
             time += Time.deltaTime;
             elevatorTransform.localPosition = Vector3.Lerp(Vector3.zero, new Vector3(0, height), time / duration);
             yield return null;
         }
-
+    
+        playerController.GetComponent<CharacterController>().enableOverlapRecovery = true;
         playerController.ExternalVelocity -= Vector3.up * speed;
         
+        
         elevatorTransform.localPosition = new Vector3(0, height);
-
+    
         yield return new WaitForSeconds(delay);
-
+    
         time = 0;
-
+    
         playerController.ExternalVelocity += Vector3.down * speed;
         
         while (time < duration)
@@ -51,9 +58,10 @@ public class Elevator : MonoBehaviour
         }
         
         playerController.ExternalVelocity -= Vector3.down * speed;
-
+    
         elevatorTransform.localPosition = Vector3.zero;
-
+    
         elevateRoutine = null;
     }
+    
 }
