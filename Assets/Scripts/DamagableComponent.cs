@@ -47,6 +47,4 @@ public class DamagableComponent : MonoBehaviour
     {
         EnemyManager.UnregisterEnemy(this);
     }
-
-
 }

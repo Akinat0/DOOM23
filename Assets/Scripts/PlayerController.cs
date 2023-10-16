@@ -8,12 +8,34 @@ public class PlayerController : MonoBehaviour
 
     Vector3 surfaceNormal;
 
+    GameObject floor;
+    GameObject Floor
+    {
+        get => floor;
+        set
+        {
+            if (floor != value)
+            {
+                if (floor != null)
+                    floor.SendMessage("OnCharacterExit", this, SendMessageOptions.DontRequireReceiver);
+                
+                if (value != null)
+                    value.SendMessage("OnCharacterEnter", this, SendMessageOptions.DontRequireReceiver);
+            }
+
+            floor = value;
+        }
+    }
+
     CharacterController characterController;
     float verticalSpeed;
 
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     private void Update()
@@ -26,7 +48,6 @@ public class PlayerController : MonoBehaviour
         else
             verticalSpeed += Physics.gravity.y * Time.deltaTime;
         
-
         Vector3 input = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
         input = Vector3.ClampMagnitude(input, 1);
 
@@ -40,6 +61,8 @@ public class PlayerController : MonoBehaviour
         velocity.y += verticalSpeed;
 
         characterController.Move(velocity * Time.deltaTime);
+
+        GroundCheck();
     }
 
     void OnControllerColliderHit(ControllerColliderHit hit)
@@ -48,4 +71,22 @@ public class PlayerController : MonoBehaviour
 
         surfaceNormal = hit.normal;
     }
+
+
+    void GroundCheck()
+    {
+        if (Physics.Linecast(
+            transform.position,
+            transform.position + Vector3.down * (characterController.height / 2 + 0.1f),
+            out RaycastHit hit))
+        {
+            Floor = hit.collider.gameObject;
+            Floor.SendMessage("OnCharacterStay", this, SendMessageOptions.DontRequireReceiver);
+        }
+        else
+        {
+            Floor = null;
+        }
+    }
+    
 }
