@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using UnityEngine;
 
@@ -11,14 +10,10 @@ public class Elevator : MonoBehaviour
 
     IEnumerator elevateRoutine;
 
-    bool isActive;
-    
     void OnTriggerEnter(Collider other)
     {
-        print("Trigger elevator");
         if (other.TryGetComponent(out PlayerController playerController) && elevateRoutine == null)
         {
-            // isActive = true;
             StartCoroutine(elevateRoutine = ElevateRoutine(playerController));
         }
     }
@@ -62,6 +57,16 @@ public class Elevator : MonoBehaviour
         elevatorTransform.localPosition = Vector3.zero;
     
         elevateRoutine = null;
+    }
+
+    void OnPlayerCollisionEnter(PlayerController playerController)
+    {
+        print("Collision enter");
+    }
+    
+    void OnPlayerCollisionEnd(PlayerController playerController)
+    {
+        print("Collision end");
     }
     
 }
