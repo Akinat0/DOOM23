@@ -1,11 +1,29 @@
 
 using UnityEngine;
 
+[RequireComponent(typeof(DamagableComponent))]
 public class BaseCharacterController : MonoBehaviour
 {
     [SerializeField] float speed = 10;
 
-    GameObject floorObject;
+    GameObject floor;
+    GameObject Floor
+    {
+        get => floor;
+        set
+        {
+            if (floor != value)
+            {
+                if (floor != null)
+                    floor.SendMessage("OnCharacterExit", this, SendMessageOptions.DontRequireReceiver);
+                
+                if (value != null)
+                    value.SendMessage("OnCharacterEnter", this, SendMessageOptions.DontRequireReceiver);
+            }
+
+            floor = value;
+        }
+    }
     
     Vector3 surfaceNormal;
 
@@ -76,24 +94,17 @@ public class BaseCharacterController : MonoBehaviour
 
     void DetectPlayerCollision()
     {
-        if (Physics.Linecast(transform.position, transform.position + Vector3.down * (characterController.height / 2 + 0.1f), out RaycastHit hit))
+        if (Physics.Linecast(
+                transform.position,
+                transform.position + Vector3.down * (characterController.height / 2 + 0.1f),
+                out RaycastHit hit))
         {
-            if (hit.collider.gameObject != floorObject)
-            {
-                if(floorObject != null)
-                    floorObject.SendMessage("OnPlayerCollisionEnd", this, SendMessageOptions.DontRequireReceiver);
-                
-                floorObject = hit.collider.gameObject;
-            }
-            
-            floorObject.SendMessage("OnPlayerCollisionEnter", this, SendMessageOptions.DontRequireReceiver);
+            Floor = hit.collider.gameObject;
+            Floor.SendMessage("OnCharacterStay", this, SendMessageOptions.DontRequireReceiver);
         }
         else
         {
-            if(floorObject != null)
-                floorObject.SendMessage("OnPlayerCollisionEnd", this, SendMessageOptions.DontRequireReceiver);
-            
-            floorObject = null;
+            Floor = null;
         }
     }
     

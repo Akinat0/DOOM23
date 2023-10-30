@@ -1,14 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class DamagableComponent : MonoBehaviour
 {
+    [SerializeField] Affiliation affiliation = Affiliation.Neutral;
     [SerializeField] int hp = 100;
 
     int currentHp;
-
     bool isDead;
+
+    public Affiliation Affiliation
+    {
+        get => affiliation;
+        set => affiliation = value;
+    }
 
     private void Start()
     {
@@ -40,12 +44,12 @@ public class DamagableComponent : MonoBehaviour
 
     private void OnEnable()
     {
-        EnemyManager.RegisterEnemy(this);
+        DamagableManager.RegisterEnemy(this);
     }
 
     private void OnDisable()
     {
-        EnemyManager.UnregisterEnemy(this);
+        DamagableManager.UnregisterEnemy(this);
     }
 
 

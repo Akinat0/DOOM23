@@ -204,6 +204,7 @@ GameObject:
   - component: {fileID: 7553576011108098774}
   - component: {fileID: 4188826378660081827}
   - component: {fileID: 6557380041344792692}
+  - component: {fileID: 3558008953873058818}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -290,6 +291,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0960a8a9d9630d459c2784b2be1ab1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  affiliation: 4
   hp: 100
 --- !u!114 &4188826378660081827
 MonoBehaviour:
@@ -300,10 +302,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 7553576011108098769}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d858c5b38a634f0f855c9234485dc975, type: 3}
+  m_Script: {fileID: 11500000, guid: 470526a7144f4a49a67b633a427be029, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 10
+  speed: 2
 --- !u!143 &6557380041344792692
 CharacterController:
   m_ObjectHideFlags: 0
@@ -322,3 +324,18 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &3558008953873058818
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7553576011108098769}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1605f880be2f4f5f8948ee18fc4f113a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewCone: 60
+  viewDist: 10
+  searchTargets: 2

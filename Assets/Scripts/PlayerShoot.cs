@@ -7,45 +7,7 @@ public class PlayerShoot : MonoBehaviour
     
     void Update()
     {
-        foreach(DamagableComponent enemy in EnemyManager.Enemies)
-        {
-            Vector3 enemyDirection = enemy.transform.position - transform.position;
-            
-            Vector3 enemyDirection2D = enemyDirection;
-            enemyDirection2D.y = 0;
-            enemyDirection2D = enemyDirection2D.normalized;
-
-            enemyDirection = enemyDirection.normalized;
-
-            float angle = Mathf.Acos(Vector3.Dot(transform.forward, enemyDirection2D)) * Mathf.Rad2Deg;
-
-            if(angle < 3)
-            {
-                CharacterController enemyCollider = enemy.GetComponent<CharacterController>();
-
-                Vector3 unitFrac = new Vector3(0, enemyCollider.height / 2);
-
-                if (AimLineAttack(enemy.transform.position)
-                    || AimLineAttack(enemy.transform.position + unitFrac)
-                    || AimLineAttack(enemy.transform.position - unitFrac))
-                {
-                    aim.CanShoot = true;
-                    return;
-                }
-            }
-        }
-
-        aim.CanShoot = false;
-    }
-
-    bool AimLineAttack(Vector3 targetPos)
-    {
-        if (Physics.Linecast(transform.position, targetPos, out RaycastHit hit)
-                    && hit.collider.GetComponent<DamagableComponent>())
-        {
-            return true;
-        }
-
-        return false;
+        DamagableComponent target = DamagableManager.GetFirstVisibleTarget(Affiliation.Demons | Affiliation.Neutral, transform, 3, 100);
+        aim.CanShoot = target != null;
     }
 }

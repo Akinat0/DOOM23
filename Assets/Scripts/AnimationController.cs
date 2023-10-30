@@ -36,18 +36,13 @@ public class AnimationController : MonoBehaviour
 
         Vector3 sourcePos = characterController.transform.position;
         sourcePos.y = 0;
-        
-        
-        
+
         float angle = Vector3.SignedAngle((targetPos - sourcePos).normalized, characterController.transform.forward, Vector3.up);
 
         Sprite sprite = null;
 
-        
-        int direction = Mathf.RoundToInt(angle / 45); 
-        print(angle);
-        print(direction);
-        
+        int direction = Mathf.RoundToInt(angle / 45);
+
         switch (direction)
         {
             case 0:

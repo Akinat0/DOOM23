@@ -59,14 +59,4 @@ public class Elevator : MonoBehaviour
         elevateRoutine = null;
     }
 
-    void OnPlayerCollisionEnter(PlayerController playerController)
-    {
-        print("Collision enter");
-    }
-    
-    void OnPlayerCollisionEnd(PlayerController playerController)
-    {
-        print("Collision end");
-    }
-    
 }

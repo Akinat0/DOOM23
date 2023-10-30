@@ -1,5 +1,15 @@
+using System;
 using UnityEngine;
 using UnityEngine.AI;
+using Random = UnityEngine.Random;
+
+public enum MoveToResult
+{
+    None, 
+    Completed, 
+    Failed, 
+    Aborted
+}
 
 public class AIController : BaseCharacterController
 {
@@ -8,6 +18,7 @@ public class AIController : BaseCharacterController
     int targetPointIndex;
 
     Vector3 moveToTargetPos;
+    Action<MoveToResult> moveToCompleted;
 
     protected override void Awake()
     {
@@ -16,25 +27,30 @@ public class AIController : BaseCharacterController
         path = new NavMeshPath();
     }
 
-    public bool MoveTo(Vector3 targetPos)
+    public bool MoveTo(Vector3 targetPos, Action<MoveToResult> completed = null, bool allowPartial = false)
     {
-        moveToTargetPos = targetPos;
+        //previous task is not completed
+        if (!isMoveToCompleted)
+            InvokeMoveToCompleted(MoveToResult.Aborted);
         
-        bool hasPath = NavMesh.CalculatePath(transform.position, moveToTargetPos, NavMesh.AllAreas, path);
+        moveToCompleted = completed;
+        moveToTargetPos = targetPos;
+        targetPointIndex = 1;
+        isMoveToCompleted = false;
+        
+        NavMesh.CalculatePath(transform.position, moveToTargetPos, NavMesh.AllAreas, path);
 
-        if (path.status != NavMeshPathStatus.PathInvalid && path.corners.Length > 1)
-            targetPointIndex = 1;
-
-        isMoveToCompleted = !hasPath;
+        bool hasPath = path.status != NavMeshPathStatus.PathInvalid 
+                       && (allowPartial || path.status == NavMeshPathStatus.PathComplete); 
+        
+        if (!hasPath)
+            InvokeMoveToCompleted(MoveToResult.Failed);
 
         return hasPath;
     }
 
-    void Update()
+    protected virtual void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E))
-            MoveTo(FindObjectOfType<PlayerController>().transform.position);
-
         UpdateMovement();
     }
 
@@ -58,8 +74,7 @@ public class AIController : BaseCharacterController
         {
             if (targetPointIndex + 1 >= path.corners.Length)
             {
-                Debug.Log("Complete!");
-                isMoveToCompleted = true;
+                InvokeMoveToCompleted(MoveToResult.Completed);
                 return;
             }
             
@@ -72,4 +87,24 @@ public class AIController : BaseCharacterController
         SetRotation(Quaternion.LookRotation(direction).eulerAngles.y);
         MoveWorld(direction.x, direction.z);
     }
+
+    protected Vector3 GetRandomReachablePosInRadius(float radius)
+    {
+        Vector3 randomDirection = Random.insideUnitSphere * radius;
+        randomDirection += transform.position;
+
+        return NavMesh.SamplePosition(randomDirection, out NavMeshHit hit, radius, NavMesh.AllAreas) 
+            ? hit.position 
+            : transform.position;
+    }
+        
+    void InvokeMoveToCompleted(MoveToResult reason)
+    {
+        isMoveToCompleted = true;
+        
+        Action<MoveToResult> action = moveToCompleted;
+        moveToCompleted = null;
+        action?.Invoke(reason);
+    }
+    
 }
