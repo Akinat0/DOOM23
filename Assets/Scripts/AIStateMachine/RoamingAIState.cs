@@ -15,16 +15,19 @@ public class RoamingAIState : AIState
     public override void Enable()
     {
         AIController.MoveTo(GetRandomPosInRadius(10), HandleMoveToCompleted);
+        AIController.Sense.TargetChanged += HandleAiTargetChanged;
     }
 
     public override void Disable()
     {
         AIController.AbortMoveTo();
+        AIController.Sense.TargetChanged -= HandleAiTargetChanged;
     }
 
     void HandleMoveToCompleted(MoveToResult result)
     {
-        ChangeState("Roaming");
+        if(result == MoveToResult.Completed)
+            ChangeState("Roaming");
     }
     
     protected Vector3 GetRandomPosInRadius(float radius)
@@ -35,5 +38,14 @@ public class RoamingAIState : AIState
         return NavMesh.SamplePosition(randomDirection, out NavMeshHit hit, radius, NavMesh.AllAreas) 
             ? hit.position 
             : AIController.transform.position;
+    }
+
+    void HandleAiTargetChanged(DamagableComponent newTarget)
+    {
+        if (newTarget != null)
+        {
+            AIController.AbortMoveTo();
+            ChangeState("Chasing");
+        }
     }
 }

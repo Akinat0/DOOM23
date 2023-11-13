@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 public class AIStateMachine
 {
@@ -17,6 +18,8 @@ public class AIStateMachine
         ActiveState?.Disable();
 
         ActiveState = States[targetState];
+        
+        Debug.Log("Change state to " + targetState);
         
         ActiveState.Enable();
     }

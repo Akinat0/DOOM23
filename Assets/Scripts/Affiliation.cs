@@ -10,5 +10,5 @@ public enum Affiliation
     Player  = 1 << 1,
     Demons  = 1 << 2,
 
-    All = int.MaxValue, 
+    Any = int.MaxValue, 
 }

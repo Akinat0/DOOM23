@@ -6,7 +6,7 @@ public class AISense : MonoBehaviour
 {
     [SerializeField] float viewCone = 60;
     [SerializeField] float viewDist = 10;
-    [SerializeField] Affiliation searchTargets = Affiliation.All;
+    [SerializeField] Affiliation searchTargets = Affiliation.Any;
 
     public event Action<DamagableComponent> TargetChanged;
 
@@ -20,6 +20,7 @@ public class AISense : MonoBehaviour
             {
                 target = value;
                 TargetChanged?.Invoke(target);
+                print($"Target changed: {(Target ? Target.gameObject : "null")}");
                 return;
             }
             
@@ -45,8 +46,14 @@ public class AISense : MonoBehaviour
 
         UnityEditor.Handles.color = handlesColor;
 
+
+        Color gizmosColor = Gizmos.color;
+        Gizmos.color = new Color(0.6f, 0, 0, 0.1f);
+        
         if(Target)
             Gizmos.DrawWireSphere(Target.transform.position, 2);
+
+        Gizmos.color = gizmosColor;
     }
     
 #endif

@@ -45,8 +45,8 @@ public static class DamagableManager
                 Vector3 unitFrac = new Vector3(0, enemyCollider.height / 2);
 
                 if (AimLineAttack(sourceTransform.position, enemy.transform.position)
-                    || AimLineAttack(sourceTransform.position, enemy.transform.position + unitFrac)
-                    || AimLineAttack(sourceTransform.position, enemy.transform.position - unitFrac))
+                    || AimLineAttack(sourceTransform.position, enemy.transform.position + unitFrac * 0.9f)
+                    || AimLineAttack(sourceTransform.position, enemy.transform.position - unitFrac * 0.9f))
                 {
                     return enemy;
                 }
@@ -58,12 +58,14 @@ public static class DamagableManager
     
     static bool AimLineAttack(Vector3 sourcePos, Vector3 targetPos)
     {
+        Debug.DrawLine(sourcePos, targetPos, Color.magenta);
+        
         if (Physics.Linecast(sourcePos, targetPos, out RaycastHit hit)
             && hit.collider.GetComponent<DamagableComponent>())
         {
             return true;
         }
-
+        
         return false;
     }
 

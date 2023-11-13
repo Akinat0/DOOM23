@@ -1,0 +1,56 @@
+
+using System.Collections;
+using UnityEngine;
+
+public class ChasingAIState : AIState
+{
+    public AIController AIController { get; }
+
+    IEnumerator chaseRoutine;
+
+    public ChasingAIState(AIController aiController, AIStateMachine stateMachine) : base(stateMachine)
+    {
+        AIController = aiController;
+    }
+
+    public override void Enable()
+    {
+        Coroutines.StartCoroutine(chaseRoutine = ChaseRoutine());
+    }
+
+    public override void Disable()
+    {
+        Coroutines.StopCoroutine(chaseRoutine);
+    }
+
+    IEnumerator ChaseRoutine()
+    {
+        Vector3 targetPos = Vector3.zero; 
+        
+        while (true)
+        {
+
+            if (AIController.Sense.Target != null)
+            {
+                targetPos = AIController.Sense.Target.transform.position;
+                AIController.MoveTo(targetPos, HandleMoveToCompleted, true);
+            }
+
+            yield return null;
+        }
+    }
+
+    void HandleMoveToCompleted(MoveToResult result)
+    {
+        if (result != MoveToResult.Aborted)
+        {
+            Debug.Log(result);
+        }
+        
+        if (result == MoveToResult.Completed)
+        {
+            ChangeState("Roaming");
+        }
+
+    }
+}
