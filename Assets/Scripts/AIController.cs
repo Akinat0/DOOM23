@@ -49,6 +49,11 @@ public class AIController : BaseCharacterController
         return hasPath;
     }
 
+    public void AbortMoveTo()
+    {
+        InvokeMoveToCompleted(MoveToResult.Aborted);
+    }
+
     protected virtual void Update()
     {
         UpdateMovement();
@@ -88,16 +93,6 @@ public class AIController : BaseCharacterController
         MoveWorld(direction.x, direction.z);
     }
 
-    protected Vector3 GetRandomReachablePosInRadius(float radius)
-    {
-        Vector3 randomDirection = Random.insideUnitSphere * radius;
-        randomDirection += transform.position;
-
-        return NavMesh.SamplePosition(randomDirection, out NavMeshHit hit, radius, NavMesh.AllAreas) 
-            ? hit.position 
-            : transform.position;
-    }
-        
     void InvokeMoveToCompleted(MoveToResult reason)
     {
         isMoveToCompleted = true;
