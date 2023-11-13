@@ -34,8 +34,18 @@ public class AIController : BaseCharacterController
 
         bool hasPath = NavMesh.CalculatePath(transform.position, targetPos, NavMesh.AllAreas, path);
 
+
         if (hasPath)
+        {
+            if(path.corners.Length == 1)
+            {
+                InvokeMoveToCompleted(MoveToCompletedReason.Success);
+                return true;
+            }
+
             pathPointIndex = 1;
+        }
+            
         
         isMoveToCompleted = false;
 
@@ -79,6 +89,7 @@ public class AIController : BaseCharacterController
 
         Vector3 direction = (targetPos - sourcePos).normalized;
 
+        SetRotation(Quaternion.LookRotation(direction, transform.up).eulerAngles.y);
         MoveWorld(direction.x, direction.z);
     }
 

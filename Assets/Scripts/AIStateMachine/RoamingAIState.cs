@@ -17,7 +17,7 @@ public class RoamingAIState : AIState
 
     public override void Disable()
     {
-
+        
     }
 
     void HandleMoveToCompleted(MoveToCompletedReason reason)

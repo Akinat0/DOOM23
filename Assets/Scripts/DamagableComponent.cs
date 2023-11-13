@@ -5,6 +5,9 @@ using UnityEngine;
 public class DamagableComponent : MonoBehaviour
 {
     [SerializeField] int hp = 100;
+    [SerializeField] Affiliation affiliation;
+
+    public Affiliation Affiliation => affiliation;
 
     int currentHp;
 
