@@ -10,6 +10,7 @@ public enum MoveToCompletedReason
 }
 
 
+[RequireComponent(typeof(AISense))]
 public class AIController : BaseCharacterController
 {
     bool isMoveToCompleted = true;
@@ -17,18 +18,22 @@ public class AIController : BaseCharacterController
     Action<MoveToCompletedReason> moveToCompleted;
 
     NavMeshPath path;
+    AISense sense;
+
+    public AISense Sense => sense;
 
     protected override void Awake()
     {
         base.Awake();
 
         path = new NavMeshPath();
+        sense = GetComponent<AISense>();
     }
 
 
     public bool MoveTo(Vector3 targetPos, Action<MoveToCompletedReason> completed = null)
     {
-        InvokeMoveToCompleted(MoveToCompletedReason.Aborted);
+        AbortMoveTo();
 
         moveToCompleted = completed;
 
@@ -100,5 +105,10 @@ public class AIController : BaseCharacterController
         Action<MoveToCompletedReason> action = moveToCompleted;
         moveToCompleted = null;
         action?.Invoke(reason);
+    }
+
+    public void AbortMoveTo()
+    {
+        InvokeMoveToCompleted(MoveToCompletedReason.Aborted);
     }
 }
