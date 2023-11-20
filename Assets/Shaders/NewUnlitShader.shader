@@ -96,8 +96,14 @@ Shader "Unlit/NewUnlitShader"
                 
                 float angle = dot(vectorForward2D, cameraDir2D);
                 float angleNormalized = acos(angle) / 3.1415;
+                float3 crossProduct = cross(float3(vectorForward2D.x, 0, vectorForward2D.y), float3(cameraDir2D.x, 0, cameraDir2D.y));
+
+                if(dot(crossProduct, float3(0, 1, 0)) < 0)
+                    angleNormalized = -angleNormalized;
                 
-                return angleNormalized;
+                float signedAngle = (angleNormalized + 1) / 2; 
+                
+                return ceil(signedAngle * 8) / 8;
                 
                 return float4(cameraDir, 1);
             }

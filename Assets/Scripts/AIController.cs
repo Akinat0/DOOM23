@@ -55,6 +55,12 @@ public class AIController : BaseCharacterController
         
         NavMesh.CalculatePath(transform.position, moveToTargetPos, NavMesh.AllAreas, path);
 
+        if (path.corners.Length == 1)
+        {
+            InvokeMoveToCompleted(MoveToResult.Completed);
+            return true;
+        }
+
         bool hasPath = path.status != NavMeshPathStatus.PathInvalid 
                        && (allowPartial || path.status == NavMeshPathStatus.PathComplete); 
         
@@ -82,19 +88,8 @@ public class AIController : BaseCharacterController
 
         for (int i = 0; i < path.corners.Length - 1; i++)
             Debug.DrawLine(path.corners[i], path.corners[i + 1], Color.red);
-
-
-        Vector3 targetPos = Vector3.zero;
-        try
-        {
-
-            targetPos = path.corners[targetPointIndex];
-        }
-        catch (Exception e)
-        {
-            Debug.Log($"PathLength {path.corners.Length}. DesiredIndex {targetPointIndex}");
-        }
         
+        Vector3 targetPos = path.corners[targetPointIndex];
         Vector3 sourcePos = transform.position;
 
         //Remove vertical
