@@ -1,5 +1,10 @@
 // ===> ADDITIONAL READING <===
 // https://jsantell.com/model-view-projection/
+// values in matrices
+// http://www.opengl-tutorial.org/beginners-tutorials/tutorial-3-matrices/ 
+
+//matrix operations 
+//https://gist.github.com/mattatz/86fff4b32d198d0928d0fa4ff32cf6fa
 
 
 
@@ -47,6 +52,7 @@ Shader "Unlit/NewUnlitShader"
             #pragma multi_compile_fog
 
             #include "UnityCG.cginc"
+            #include "MatrixOperations.cginc"
 
             struct appdata
             {
@@ -68,7 +74,7 @@ Shader "Unlit/NewUnlitShader"
             float4 _MainTex_ST;
 
             //https://docs.unity3d.com/Packages/com.unity.shadergraph@6.9/manual/Rotate-About-Axis-Node.html
-            void Unity_RotateAboutAxis_Radians_float(float3 In, float3 Axis, float Rotation, out float3 Out)
+            void Unity_RotateAboutAxis_Radians(float3 In, float3 Axis, float Rotation, out float3 Out)
             {
                 float s = sin(Rotation);
                 float c = cos(Rotation);
@@ -81,6 +87,17 @@ Shader "Unlit/NewUnlitShader"
                     one_minus_c * Axis.z * Axis.x - Axis.y * s, one_minus_c * Axis.y * Axis.z + Axis.x * s, one_minus_c * Axis.z * Axis.z + c
                 };
                 Out = mul(rot_mat,  In);
+            }
+
+            //https://docs.unity3d.com/Packages/com.unity.shadergraph@6.9/manual/Flipbook-Node.html
+
+            void Unity_Flipbook(float2 UV, float Width, float Height, float Tile, float2 Invert, out float2 Out)
+            {
+                Tile = fmod(Tile, Width * Height);
+                float2 tileCount = float2(1.0, 1.0) / float2(Width, Height);
+                float tileY = abs(Invert.y * Height - (floor(Tile * tileCount.x) + Invert.y * 1));
+                float tileX = abs(Invert.x * Width - ((Tile - Width * floor(Tile * tileCount.x)) + Invert.x * 1));
+                Out = (UV + float2(tileX, tileY)) * tileCount;
             }
             
             v2f vert (appdata v)
@@ -114,19 +131,20 @@ Shader "Unlit/NewUnlitShader"
                 float angleNormalized = angleRad / 3.1415;
                 
                 o.cameraAngle = (angleNormalized + 1) / 2;
+
                 
                 float3 newVertex;
-                Unity_RotateAboutAxis_Radians_float(v.vertex, float3(0, 1, 0), angleRad, newVertex);
+
+                //WE CAN'T SCALE THIS SHADER BECAUSE MODEL TRANSFORMATION IS STILL THINKING THAT VERTEX IS NOT ROTATED
+                Unity_RotateAboutAxis_Radians(v.vertex, float3(0, 1, 0), angleRad, newVertex);
 
                 o.vertex = UnityObjectToClipPos(newVertex);
-                
                 return o;
             }
 
             fixed4 frag (v2f i) : SV_Target
             {
-                // sample the texture
-                fixed4 col = tex2D(_MainTex, i.uv);
+                
 
                 i.normal.y = 0; //remove pitch from normal
 
@@ -136,10 +154,21 @@ Shader "Unlit/NewUnlitShader"
                 float3 localNormal = fixed4(i.normal, 1);
 
                 float2 normal2D = normalize(i.normal.xz);
+
+                // half of 1.8 direction
+                float tileAngle = fmod(i.cameraAngle + 0.0625, 1); 
                 
-                return ceil(i.cameraAngle * 8) / 8;
+                float tile = floor(lerp(0, 8, tileAngle));
+                float2 uv;
+                Unity_Flipbook(i.uv, 4, 2, tile, float2(0, 1), uv);
                 
-                // return float4(i.cameraDir, 1);
+                // sample the texture
+                fixed4 color = tex2D(_MainTex, uv);
+
+                if(color.a < 0.001)
+                    discard;
+                
+                return color;
             }
             ENDCG
         }
