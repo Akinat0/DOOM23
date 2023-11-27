@@ -1,5 +1,7 @@
 // ===> ADDITIONAL READING <===
+
 // https://jsantell.com/model-view-projection/
+
 // values in matrices
 // http://www.opengl-tutorial.org/beginners-tutorials/tutorial-3-matrices/ 
 
@@ -144,8 +146,6 @@ Shader "Unlit/NewUnlitShader"
 
             fixed4 frag (v2f i) : SV_Target
             {
-                
-
                 i.normal.y = 0; //remove pitch from normal
 
                 //during dir transformation we must set last coord to 0 to avoid translation scaling
@@ -155,7 +155,7 @@ Shader "Unlit/NewUnlitShader"
 
                 float2 normal2D = normalize(i.normal.xz);
 
-                // half of 1.8 direction
+                // half of 1/8 direction
                 float tileAngle = fmod(i.cameraAngle + 0.0625, 1); 
                 
                 float tile = floor(lerp(0, 8, tileAngle));

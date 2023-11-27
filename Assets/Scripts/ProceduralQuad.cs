@@ -2,14 +2,33 @@
 using System;
 using UnityEngine;
 
+[ExecuteAlways]
 public class ProceduralQuad : MonoBehaviour
 {
-    public Material targetMaterial;
-    public float width = 1;
-    public float height = 1;
+    static readonly int MainTex = Shader.PropertyToID("_MainTex");
     
+    [SerializeField] Material targetMaterial;
+    
+    [SerializeField] float width = 1;
+    [SerializeField] float height = 1;
+
+    [SerializeField] Texture2D texture;
+
+
+    void OnDidApplyAnimationProperties()
+    {
+        Refresh();
+    }
+
 #if UNITY_EDITOR
     void OnValidate()
+    {
+        Refresh();
+    }
+    
+#endif
+
+    void Refresh()
     {
         MeshRenderer meshRenderer;
         MeshFilter meshFilter;
@@ -62,9 +81,13 @@ public class ProceduralQuad : MonoBehaviour
         };
         mesh.uv = uv;
 
+        
         meshFilter.mesh = mesh;
+        
+        if(!Application.isPlaying)
+            meshRenderer.sharedMaterial.SetTexture(MainTex, texture);
+        else
+            meshRenderer.material.SetTexture(MainTex, texture);
     }
-    
-#endif
 }
 
