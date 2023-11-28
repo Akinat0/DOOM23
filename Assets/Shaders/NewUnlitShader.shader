@@ -8,7 +8,11 @@
 //matrix operations 
 //https://gist.github.com/mattatz/86fff4b32d198d0928d0fa4ff32cf6fa
 
+//to demonstate matrices
+//matrixmultiplication.xyz 
 
+//documentation
+//https://ru.wikipedia.org/wiki/HLSL
 
 /*
 Spaces:
