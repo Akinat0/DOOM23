@@ -1,4 +1,4 @@
-Shader "Unlit/AmirShader"
+Shader "Billboard/8Directional"
 {
     Properties
     {
@@ -24,6 +24,7 @@ Shader "Unlit/AmirShader"
             #pragma multi_compile_fog
 
             #include "UnityCG.cginc"
+            #include "DoomBillboard.cginc"
 
             struct appdata
             {
@@ -44,31 +45,6 @@ Shader "Unlit/AmirShader"
             sampler2D _MainTex;
             float4 _MainTex_ST;
 
-
-            void Unity_RotateAboutAxis_Radians_float(float3 In, float3 Axis, float Rotation, out float3 Out)
-            {
-                float s = sin(Rotation);
-                float c = cos(Rotation);
-                float one_minus_c = 1.0 - c;
-
-                Axis = normalize(Axis);
-                float3x3 rot_mat = 
-                {   one_minus_c * Axis.x * Axis.x + c, one_minus_c * Axis.x * Axis.y - Axis.z * s, one_minus_c * Axis.z * Axis.x + Axis.y * s,
-                    one_minus_c * Axis.x * Axis.y + Axis.z * s, one_minus_c * Axis.y * Axis.y + c, one_minus_c * Axis.y * Axis.z - Axis.x * s,
-                    one_minus_c * Axis.z * Axis.x - Axis.y * s, one_minus_c * Axis.y * Axis.z + Axis.x * s, one_minus_c * Axis.z * Axis.z + c
-                };
-                Out = mul(rot_mat,  In);
-            }
-
-            //https://docs.unity3d.com/Packages/com.unity.shadergraph@6.9/manual/Flipbook-Node.html
-            void Unity_Flipbook_float(float2 UV, float Width, float Height, float Tile, float2 Invert, out float2 Out)
-            {
-                Tile = fmod(Tile, Width * Height);
-                float2 tileCount = float2(1.0, 1.0) / float2(Width, Height);
-                float tileY = abs(Invert.y * Height - (floor(Tile * tileCount.x) + Invert.y * 1));
-                float tileX = abs(Invert.x * Width - ((Tile - Width * floor(Tile * tileCount.x)) + Invert.x * 1));
-                Out = (UV + float2(tileX, tileY)) * tileCount;
-            }
 
             v2f vert (appdata v)
             {
@@ -93,7 +69,7 @@ Shader "Unlit/AmirShader"
 
                 float3 crossProduct = cross(
                     float3(vectorForward2D.x, 0, vectorForward2D.y),
-                    float3(cameraDir.x, 0, cameraDir.y));
+                    float3(cameraDir2D.x, 0, cameraDir2D.y));
 
                 if(dot(crossProduct, float3(0, 1, 0)) < 0)
                     angleRad = -angleRad;
@@ -116,12 +92,12 @@ Shader "Unlit/AmirShader"
             {   
                 
 
-                float tileAngle = fmod(i.angle - 0.0625, 1);
+                float tileAngle = fmod(i.angle + 0.0625, 1);
 
                 float tile = floor(lerp(0, 8, tileAngle));
 
                 float2 uv;
-                Unity_Flipbook_float(i.uv, 4, 2, tile, float2(1, 1), uv);
+                Unity_Flipbook_float(i.uv, 4, 2, tile, float2(0, 0), uv);
 
                 // sample the texture
                 fixed4 color = tex2D(_MainTex, uv);
