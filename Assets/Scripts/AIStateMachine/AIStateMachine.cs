@@ -13,14 +13,20 @@ public class AIStateMachine
         States.Add(stateId, state);
     }
 
-    public void SetActiveState(string targetState)
+    public void SetActiveState(string targetStateId)
     {
-        ActiveState?.Disable();
+        if (States.TryGetValue(targetStateId, out AIState targetState))
+        {
+            ActiveState?.Disable();
 
-        ActiveState = States[targetState];
+            ActiveState = targetState;
         
-        Debug.Log("Change state to " + targetState);
-        
-        ActiveState.Enable();
+            ActiveState.Enable();
+        }
+        else
+        {
+            Debug.LogError($"State {targetStateId} is not presented in states list");
+        }
+       
     }
 }

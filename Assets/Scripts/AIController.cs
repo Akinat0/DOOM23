@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 using UnityEngine.AI;
-using Random = UnityEngine.Random;
 
 public enum MoveToResult
 {
@@ -11,63 +10,50 @@ public enum MoveToResult
     Aborted
 }
 
-[RequireComponent(typeof(AISense))]
+[RequireComponent(typeof(AISense), typeof(NavMeshAgent))]
 public class AIController : BaseCharacterController
 {
     bool isMoveToCompleted = true;
-    NavMeshPath path;
-    int targetPointIndex;
-
     float moveToAcceptanceRadius;
     Vector3 moveToTargetPos;
     Action<MoveToResult> moveToCompleted;
 
     AISense sense;
+    NavMeshAgent agent;
 
     public AISense Sense => sense;
+    public override float Height => agent.height;
+    public override float Radius => agent.radius;
 
-    protected override void Awake()
+    protected void Awake()
     {
-        base.Awake();
-
-        path = new NavMeshPath();
+        agent = GetComponent<NavMeshAgent>();
         sense = GetComponent<AISense>();
+
+        agent.angularSpeed = 1000;
+        agent.acceleration = 1000;
+        agent.speed = Speed;
     }
 
-    public bool MoveTo(Vector3 targetPos, Action<MoveToResult> completed = null, bool allowPartial = false, float acceptanceRadius = 3)
+    public bool MoveTo(Vector3 targetPos, Action<MoveToResult> completed = null, float acceptanceRadius = 1)
     {
-        //previous task is not completed
         if (!isMoveToCompleted)
             InvokeMoveToCompleted(MoveToResult.Aborted);
-        
-        moveToCompleted = completed;
-        targetPointIndex = 1;
+
         isMoveToCompleted = false;
+        moveToTargetPos = targetPos;
+        moveToCompleted = completed;
         moveToAcceptanceRadius = acceptanceRadius;
 
-        if (!NavMesh.SamplePosition(targetPos, out NavMeshHit hit, acceptanceRadius, NavMesh.AllAreas))
+        if (!agent.SetDestination(targetPos))
         {
             InvokeMoveToCompleted(MoveToResult.Failed);
             return false;
         }
-
-        moveToTargetPos = hit.position;
-        
-        NavMesh.CalculatePath(transform.position, moveToTargetPos, NavMesh.AllAreas, path);
-
-        if (path.corners.Length == 1)
+        else
         {
-            InvokeMoveToCompleted(MoveToResult.Completed);
             return true;
         }
-
-        bool hasPath = path.status != NavMeshPathStatus.PathInvalid 
-                       && (allowPartial || path.status == NavMeshPathStatus.PathComplete); 
-        
-        if (!hasPath)
-            InvokeMoveToCompleted(MoveToResult.Failed);
-
-        return hasPath;
     }
 
     public void AbortMoveTo()
@@ -77,43 +63,14 @@ public class AIController : BaseCharacterController
 
     protected virtual void Update()
     {
-        UpdateMovement();
-    }
-
-
-    void UpdateMovement()
-    {
         if(isMoveToCompleted)
             return;
 
-        for (int i = 0; i < path.corners.Length - 1; i++)
-            Debug.DrawLine(path.corners[i], path.corners[i + 1], Color.red);
-        
-        Vector3 targetPos = path.corners[targetPointIndex];
-        Vector3 sourcePos = transform.position;
-
-        //Remove vertical
-        targetPos = new Vector3(targetPos.x, 0, targetPos.z);
-        sourcePos = new Vector3(sourcePos.x, 0, sourcePos.z);
-
-        float tolerance = targetPointIndex == path.corners.Length - 1 ? moveToAcceptanceRadius : 1;
-        
-        if (Vector3.Distance(targetPos, sourcePos) < tolerance)
+        if (Vector3.SqrMagnitude(moveToTargetPos - transform.position) 
+            <= moveToAcceptanceRadius * moveToAcceptanceRadius)
         {
-            if (targetPointIndex + 1 >= path.corners.Length)
-            {
-                InvokeMoveToCompleted(MoveToResult.Completed);
-                return;
-            }
-            
-            targetPointIndex++;
-            targetPos = path.corners[targetPointIndex];
+            InvokeMoveToCompleted(MoveToResult.Completed);
         }
-
-        Vector3 direction = (targetPos - sourcePos).normalized; 
-        
-        SetRotation(Quaternion.LookRotation(direction).eulerAngles.y);
-        MoveWorld(direction.x, direction.z);
     }
 
     void InvokeMoveToCompleted(MoveToResult reason)
@@ -124,5 +81,4 @@ public class AIController : BaseCharacterController
         moveToCompleted = null;
         action?.Invoke(reason);
     }
-    
 }

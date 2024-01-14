@@ -33,7 +33,7 @@ public class ChasingAIState : AIState
             if (AIController.Sense.Target != null)
             {
                 targetPos = AIController.Sense.Target.transform.position;
-                AIController.MoveTo(targetPos, HandleMoveToCompleted, true);
+                AIController.MoveTo(targetPos, HandleMoveToCompleted);
             }
 
             yield return null;

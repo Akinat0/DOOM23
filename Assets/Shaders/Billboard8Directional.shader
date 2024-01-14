@@ -160,9 +160,11 @@ Shader "Unlit/NewUnlitShader"
                 float2 normal2D = normalize(i.normal.xz);
 
                 // half of 1/8 direction
-                float tileAngle = fmod(i.cameraAngle + 0.0625, 1); 
+                float tileAngle = fmod(i.cameraAngle - 0.0625, 1); 
                 
-                float tile = floor(lerp(0, 8, tileAngle));
+                float tile = floor(lerp(0, 8, 1 - tileAngle));
+
+                // return tileAngle;
                 float2 uv;
                 Unity_Flipbook(i.uv, 4, 2, tile, float2(0, 1), uv);
                 

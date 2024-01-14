@@ -40,9 +40,9 @@ public static class DamagableManager
 
             if(angle < viewAngle / 2)
             {
-                CharacterController enemyCollider = enemy.GetComponent<CharacterController>();
+                BaseCharacterController controller = enemy.GetComponent<BaseCharacterController>();
 
-                Vector3 unitFrac = new Vector3(0, enemyCollider.height / 2);
+                Vector3 unitFrac = new Vector3(0, controller.Height / 2);
 
                 if (AimLineAttack(sourceTransform.position, enemy.transform.position)
                     || AimLineAttack(sourceTransform.position, enemy.transform.position + unitFrac * 0.9f)
@@ -58,8 +58,6 @@ public static class DamagableManager
     
     static bool AimLineAttack(Vector3 sourcePos, Vector3 targetPos)
     {
-        Debug.DrawLine(sourcePos, targetPos, Color.magenta);
-        
         if (Physics.Linecast(sourcePos, targetPos, out RaycastHit hit)
             && hit.collider.GetComponent<DamagableComponent>())
         {
