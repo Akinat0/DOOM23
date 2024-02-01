@@ -32,7 +32,7 @@ Transforms:
 
 
 
-Shader "Unlit/NewUnlitShader"
+Shader "Billboard/8 Directional"
 {
     Properties
     {
@@ -159,8 +159,9 @@ Shader "Unlit/NewUnlitShader"
 
                 float2 normal2D = normalize(i.normal.xz);
 
-                // half of 1/8 direction
-                float tileAngle = fmod(i.cameraAngle - 0.0625, 1); 
+                // 0.0625 = half of 1/8 direction
+                // + 1 is required because fmod seems to not work with negative values
+                float tileAngle = fmod(i.cameraAngle - 0.0625 + 1, 1); 
                 
                 float tile = floor(lerp(0, 8, 1 - tileAngle));
 
