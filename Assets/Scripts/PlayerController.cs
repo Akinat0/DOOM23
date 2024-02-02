@@ -57,7 +57,7 @@ public class PlayerController : BaseCharacterController
         Vector3 movementDirection = new Vector3(forward, 0, right);
         movementDirection = Vector3.ClampMagnitude(movementDirection, 1);
 
-        Vector3 velocity = transform.TransformDirection(movementDirection) * Speed;
+        Vector3 velocity = transform.TransformDirection(movementDirection) * MaxSpeed;
 
         Quaternion slopeRotation = Quaternion.FromToRotation(Vector3.up, surfaceNormal);
         Vector3 adjustedVelocity = slopeRotation * velocity;

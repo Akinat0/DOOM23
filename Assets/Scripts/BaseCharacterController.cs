@@ -1,10 +1,10 @@
-
 using UnityEngine;
 
 [RequireComponent(typeof(DamagableComponent))]
 public abstract class BaseCharacterController : MonoBehaviour
 {
-    [SerializeField] float speed = 10;
+    [SerializeField] float maxSpeed = 10;
+    
 
     GameObject floor;
     GameObject Floor
@@ -24,15 +24,22 @@ public abstract class BaseCharacterController : MonoBehaviour
             floor = value;
         }
     }
+    
+    
 
     public abstract float Height { get; }
     public abstract float Radius { get; }
 
-    public float Speed => speed;
-    
+    public float MaxSpeed => maxSpeed;
+
+    public float CurrentSpeed { get; private set; }
+
+    Vector3 prevPos;
+
     void LateUpdate()
     {
-        DetectPlayerCollision(); 
+        UpdateCurrentSpeed();
+        DetectPlayerCollision();
     }
 
     void DetectPlayerCollision()
@@ -49,5 +56,12 @@ public abstract class BaseCharacterController : MonoBehaviour
         {
             Floor = null;
         }
+    }
+
+    void UpdateCurrentSpeed()
+    {
+        Vector3 currentPos = transform.position;
+        CurrentSpeed = Vector3.Distance(currentPos, prevPos) / Time.deltaTime;
+        prevPos = currentPos;
     }
 }

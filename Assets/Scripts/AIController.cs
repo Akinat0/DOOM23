@@ -32,7 +32,7 @@ public class AIController : BaseCharacterController
 
         agent.angularSpeed = 1000;
         agent.acceleration = 1000;
-        agent.speed = Speed;
+        agent.speed = MaxSpeed;
     }
 
     public bool MoveTo(Vector3 targetPos, Action<MoveToResult> completed = null, float acceptanceRadius = 1)

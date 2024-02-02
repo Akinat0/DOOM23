@@ -6,7 +6,7 @@ AnimatorController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: CYBR
+  m_Name: SARG
   serializedVersion: 5
   m_AnimatorParameters:
   - m_Name: Speed
@@ -70,7 +70,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 17c80578be8274510be668bb7ccf8daf, type: 2}
+  m_Motion: {fileID: 7400000, guid: 4cc6551fad24746eeb1c181d92ee4d2f, type: 2}
   m_Tag: 
   m_SpeedParameter: Speed
   m_MirrorParameter: 
