@@ -36,6 +36,11 @@ public class DamagableComponent : MonoBehaviour
         }
     }
 
+    public void ApplyDamage(int damage)
+    {
+        Hp -= damage;
+    }
+    
     void Die()
     {
         Debug.Log($"{gameObject.name} is dead");
@@ -51,6 +56,4 @@ public class DamagableComponent : MonoBehaviour
     {
         DamagableManager.UnregisterEnemy(this);
     }
-
-
 }

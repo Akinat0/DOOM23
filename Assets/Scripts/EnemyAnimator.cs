@@ -5,6 +5,7 @@ using UnityEngine;
 public class EnemyAnimator : MonoBehaviour
 {
     static readonly int SpeedId = Animator.StringToHash("Speed");
+    static readonly int IsDeadId = Animator.StringToHash("IsDead");
     
     Animator animator;
     AIController controller;
@@ -21,5 +22,6 @@ public class EnemyAnimator : MonoBehaviour
     void Update()
     {
         Animator.SetFloat(SpeedId, Controller.CurrentSpeed / Controller.MaxSpeed);
+        Animator.SetBool(IsDeadId, controller.Damagable.IsDead);
     }
 }

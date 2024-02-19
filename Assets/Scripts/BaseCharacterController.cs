@@ -24,8 +24,14 @@ public abstract class BaseCharacterController : MonoBehaviour
             floor = value;
         }
     }
-    
-    
+
+    public DamagableComponent Damagable { get; private set; }
+
+
+    protected virtual void Awake()
+    {
+        Damagable = GetComponent<DamagableComponent>();
+    }
 
     public abstract float Height { get; }
     public abstract float Radius { get; }

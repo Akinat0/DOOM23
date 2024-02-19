@@ -1,17 +1,22 @@
+using System;
 using UnityEngine;
 
 public class GameScene : MonoBehaviour
 {
+    static GameScene instance;
+
     [SerializeField] PlayerController player;
-    [SerializeField] ShooterController shooter;
-    
-    readonly EnemiesManager enemiesManager = new EnemiesManager();
+
+    public static PlayerController Player => instance != null ? instance.player : null; 
+
     
     void Awake()
     {
-        foreach (Enemy enemy in FindObjectsOfType<Enemy>())
-            enemy.EnemiesManager = enemiesManager;
+        instance = this;
+    }
 
-        shooter.EnemiesManager = enemiesManager;
+    void OnDestroy()
+    {
+        instance = null;
     }
 }

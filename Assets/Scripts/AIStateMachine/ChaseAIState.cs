@@ -42,10 +42,6 @@ public class ChasingAIState : AIState
 
     void HandleMoveToCompleted(MoveToResult result)
     {
-        if (result != MoveToResult.Aborted)
-        {
-            Debug.Log(result);
-        }
         
         if (result == MoveToResult.Completed)
         {

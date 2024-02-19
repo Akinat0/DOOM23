@@ -11,13 +11,17 @@ public class PlayerController : BaseCharacterController
     CharacterController characterController;
     float verticalSpeed;
 
+    public Camera Camera => playerCamera;
+
     public override float Height => characterController.height;
     public override float Radius => characterController.radius;
     
     bool IsGrounded => characterController.isGrounded;
     
-    protected void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+        
         characterController = GetComponent<CharacterController>();
         
         Cursor.lockState = CursorLockMode.Locked;
@@ -27,7 +31,6 @@ public class PlayerController : BaseCharacterController
 
     void Update()
     {
-
         Rotate(Input.GetAxisRaw("Mouse X") * sensitivity);
         Move(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         

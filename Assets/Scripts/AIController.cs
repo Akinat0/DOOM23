@@ -25,8 +25,10 @@ public class AIController : BaseCharacterController
     public override float Height => agent.height;
     public override float Radius => agent.radius;
 
-    protected void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+        
         agent = GetComponent<NavMeshAgent>();
         sense = GetComponent<AISense>();
 
@@ -37,6 +39,8 @@ public class AIController : BaseCharacterController
 
     public bool MoveTo(Vector3 targetPos, Action<MoveToResult> completed = null, float acceptanceRadius = 1)
     {
+        agent.enabled = true;
+        
         if (!isMoveToCompleted)
             InvokeMoveToCompleted(MoveToResult.Aborted);
 

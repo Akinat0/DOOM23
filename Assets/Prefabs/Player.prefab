@@ -186,7 +186,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c5b65d364c0aab4bb5e44aade89b583, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 10
+  maxSpeed: 10
   sensitivity: 1
   playerCamera: {fileID: 2834126802559948805}
 --- !u!143 &2834126802955109046
@@ -220,6 +220,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   aim: {fileID: 0}
+  audioSource: {fileID: 0}
+  shootAudioClip: {fileID: 0}
+  damage: 20
 --- !u!114 &503912164922326385
 MonoBehaviour:
   m_ObjectHideFlags: 0

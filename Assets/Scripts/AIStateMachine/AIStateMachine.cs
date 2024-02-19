@@ -5,7 +5,7 @@ public class AIStateMachine
 {
     Dictionary<string, AIState> States { get; } = new Dictionary<string, AIState>();
 
-    AIState ActiveState { get; set; }
+    public AIState ActiveState { get; private set; }
 
 
     public void AddState(string stateId, AIState state)
