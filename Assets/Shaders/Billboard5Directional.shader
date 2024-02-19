@@ -40,9 +40,11 @@ Shader "Billboard/5 Directional"
     }
     SubShader
     {
+        Blend SrcAlpha OneMinusSrcAlpha
+        
         Tags 
         { 
-            "RenderType"      = "Opaque"
+            "RenderType"      = "Transparent"
             "DisableBatching" = "True"
         }
         

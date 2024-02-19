@@ -48,6 +48,7 @@ public class AIController : BaseCharacterController
         moveToTargetPos = targetPos;
         moveToCompleted = completed;
         moveToAcceptanceRadius = acceptanceRadius;
+        agent.isStopped = false;
 
         if (!agent.SetDestination(targetPos))
         {
@@ -79,6 +80,7 @@ public class AIController : BaseCharacterController
 
     void InvokeMoveToCompleted(MoveToResult reason)
     {
+        agent.isStopped = true;
         isMoveToCompleted = true;
         
         Action<MoveToResult> action = moveToCompleted;

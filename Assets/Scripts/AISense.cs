@@ -20,7 +20,6 @@ public class AISense : MonoBehaviour
             {
                 target = value;
                 TargetChanged?.Invoke(target);
-                print($"Target changed: {(Target ? Target.gameObject : "null")}");
                 return;
             }
             

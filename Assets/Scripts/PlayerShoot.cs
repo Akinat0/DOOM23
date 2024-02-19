@@ -5,6 +5,7 @@ public class PlayerShoot : MonoBehaviour
     [SerializeField] UIAim aim;
     [SerializeField] AudioSource audioSource;
     [SerializeField] AudioClip shootAudioClip;
+    [SerializeField] GameObject shootVfxPrefab;
     [SerializeField] int damage;
 
     void Update()
@@ -18,8 +19,6 @@ public class PlayerShoot : MonoBehaviour
     {
         Transform cameraTransform = GameScene.Player.Camera.transform;
 
-        // Debug.DrawLine(cameraTransform.position, cameraTransform.position + (cameraTransform.forward * 100), Color.green, 0, false);
-
         aim.CanShoot = false;
         
         if (!Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit)) 
@@ -27,7 +26,7 @@ public class PlayerShoot : MonoBehaviour
         
         //probably check in children 
         if (hit.collider.TryGetComponent(out DamagableComponent damagable))
-            aim.CanShoot = (damagable.Affiliation & Affiliation.Demons) != 0 || (damagable.Affiliation & Affiliation.Neutral) != 0;
+            aim.CanShoot = !damagable.IsDead && ((damagable.Affiliation & Affiliation.Demons) != 0 || (damagable.Affiliation & Affiliation.Neutral) != 0);
         else
             aim.CanShoot = false;
     }
@@ -45,17 +44,21 @@ public class PlayerShoot : MonoBehaviour
             audioSource.PlayOneShot(shootAudioClip);
         }
 
-        //we didn't hit anybody
+        //we didn't hit anything
         if (!Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit))
             return;
-        
+
         if (!hit.collider.TryGetComponent(out DamagableComponent damagable))
+        {
+            //we've hit wall or something solid
+            if (shootVfxPrefab)
+                Instantiate(shootVfxPrefab, hit.point, Quaternion.identity);
             return;
+        }
 
         damagable.ApplyDamage(damage);
 
-
-
+        
     }
     
     

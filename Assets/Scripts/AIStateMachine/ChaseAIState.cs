@@ -20,6 +20,7 @@ public class ChasingAIState : AIState
 
     public override void Disable()
     {
+        AIController.AbortMoveTo();
         Coroutines.StopCoroutine(chaseRoutine);
     }
 

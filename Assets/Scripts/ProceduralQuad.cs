@@ -6,6 +6,7 @@ using UnityEngine;
 public class ProceduralQuad : MonoBehaviour
 {
     static readonly int MainTex = Shader.PropertyToID("_MainTex");
+    static readonly int Frame = Shader.PropertyToID("_Frame");
     
     [SerializeField] Material targetMaterial;
     
@@ -13,6 +14,8 @@ public class ProceduralQuad : MonoBehaviour
     [SerializeField] float height = 1;
 
     [SerializeField] Texture2D texture;
+
+    [SerializeField] int frame;
 
 
     void OnDidApplyAnimationProperties()
@@ -80,14 +83,19 @@ public class ProceduralQuad : MonoBehaviour
             new Vector2(1, 1)
         };
         mesh.uv = uv;
-
         
         meshFilter.mesh = mesh;
+
+
+        Material material = Application.isPlaying 
+            ? meshRenderer.material 
+            : meshRenderer.sharedMaterial;
         
-        if(!Application.isPlaying)
-            meshRenderer.sharedMaterial.SetTexture(MainTex, texture);
-        else
-            meshRenderer.material.SetTexture(MainTex, texture);
+        
+        material.SetTexture(MainTex, texture);
+        if (material.shader.name == "Billboard/Animated")
+            material.SetFloat(Frame, frame);
+        
     }
 }
 
