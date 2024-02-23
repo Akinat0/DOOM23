@@ -7,10 +7,11 @@ public class DemonAIController : AIController
     void Start()
     {
         stateMachine = new AIStateMachine();
+        stateMachine.AddState("Idle", new IdleAIState(this, stateMachine));
         stateMachine.AddState("Roaming", new RoamingAIState(this, stateMachine));
         stateMachine.AddState("Chasing", new ChasingAIState(this, stateMachine));
         stateMachine.AddState("Dead", new DeadAIState(stateMachine));
-        stateMachine.SetActiveState("Roaming");
+        stateMachine.SetActiveState("Idle");
     }
 
     protected override void Update()

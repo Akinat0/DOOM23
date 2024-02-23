@@ -167,6 +167,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   viewCone: 90
   viewDist: 20
+  touchRadius: 2
   searchTargets: 2
 --- !u!195 &7787837945407646140
 NavMeshAgent:
@@ -273,7 +274,7 @@ MeshFilter:
   m_Mesh: {fileID: 0}
 --- !u!95 &4048781901275825575
 Animator:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -290,7 +291,8 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &605467476188275480
 MonoBehaviour:
   m_ObjectHideFlags: 0

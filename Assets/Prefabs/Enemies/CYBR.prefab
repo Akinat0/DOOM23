@@ -23,6 +23,10 @@ PrefabInstance:
       propertyPath: viewDist
       value: 30
       objectReference: {fileID: 0}
+    - target: {fileID: 3558008953873058818, guid: df779c2df450c444591458f65163c845, type: 3}
+      propertyPath: touchRadius
+      value: 1.4
+      objectReference: {fileID: 0}
     - target: {fileID: 4188826378660081827, guid: df779c2df450c444591458f65163c845, type: 3}
       propertyPath: maxSpeed
       value: 3
