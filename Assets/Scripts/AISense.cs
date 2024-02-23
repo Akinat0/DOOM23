@@ -2,6 +2,7 @@
 using System;
 using UnityEngine;
 
+[RequireComponent(typeof(DamagableComponent))]
 public class AISense : MonoBehaviour
 {
     [SerializeField] float viewCone = 60;
@@ -26,9 +27,35 @@ public class AISense : MonoBehaviour
             target = value;
         }
     }
-    
+
+    DamagableComponent SelfDamagable { get; set; }
+
+    void Awake()
+    {
+        SelfDamagable = GetComponent<DamagableComponent>();
+    }
+
+    void OnEnable()
+    {
+        SelfDamagable.HpChangedFromCharacter += HandleHpChanged;
+    }
+
+    void OnDisable()
+    {
+        SelfDamagable.HpChangedFromCharacter -= HandleHpChanged;
+    }
+
+    void HandleHpChanged(int delta, BaseCharacterController character)
+    {
+        //If we've got damage from our search target, let's set it as target
+        if ((character.Damagable.Affiliation & searchTargets) != 0)
+            Target = character.Damagable;
+    }
+
     void Update()
     {
+        //Probably we should not update target if we already have a valid target
+        //Also we need an opportunity to loose target at radius  
         Target = DamagableManager.GetFirstVisibleTarget(searchTargets, transform, viewCone, viewDist);
     }
 

@@ -1,5 +1,7 @@
 using UnityEngine;
+using Random = UnityEngine.Random;
 
+[RequireComponent(typeof(PlayerController))]
 public class PlayerShoot : MonoBehaviour
 {
     [SerializeField] UIAim aim;
@@ -8,11 +10,25 @@ public class PlayerShoot : MonoBehaviour
     [SerializeField] GameObject shootVfxPrefab;
     [SerializeField] int damage;
 
+
+    PlayerController playerController;
+
+    int ignorePlayerLayerMask;
+    
+    void Awake()
+    {
+        playerController = GetComponent<PlayerController>();
+        ignorePlayerLayerMask = Physics.DefaultRaycastLayers & ~(1 << LayerMask.NameToLayer("Player"));
+    }
+
     void Update()
     {
         ProcessCanShoot();
         ProcessShootInput();
     }
+
+
+    const float MaxDistance = 999;
 
 
     void ProcessCanShoot()
@@ -21,7 +37,7 @@ public class PlayerShoot : MonoBehaviour
 
         aim.CanShoot = false;
         
-        if (!Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit)) 
+        if (!Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, MaxDistance, ignorePlayerLayerMask)) 
             return;
         
         //probably check in children 
@@ -45,7 +61,7 @@ public class PlayerShoot : MonoBehaviour
         }
 
         //we didn't hit anything
-        if (!Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit))
+        if (!Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, MaxDistance, ignorePlayerLayerMask))
             return;
 
         if (!hit.collider.TryGetComponent(out DamagableComponent damagable))
@@ -56,7 +72,7 @@ public class PlayerShoot : MonoBehaviour
             return;
         }
 
-        damagable.ApplyDamage(damage);
+        damagable.ApplyDamage(damage, playerController);
 
         
     }

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2834126802559948802}
   - component: {fileID: 2834126802559948805}
   - component: {fileID: 2834126802559948804}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Main Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -102,7 +102,7 @@ GameObject:
   - component: {fileID: 7880871338507679702}
   - component: {fileID: 1968023566}
   - component: {fileID: 5487604102525915276}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -223,6 +223,7 @@ MonoBehaviour:
   aim: {fileID: 0}
   audioSource: {fileID: 5487604102525915276}
   shootAudioClip: {fileID: 8300000, guid: 058e17f5484dd46e68a0365484e5ec67, type: 3}
+  shootVfxPrefab: {fileID: 0}
   damage: 20
 --- !u!114 &503912164922326385
 MonoBehaviour:
