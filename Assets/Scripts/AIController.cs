@@ -13,6 +13,8 @@ public enum MoveToResult
 [RequireComponent(typeof(AISense), typeof(NavMeshAgent))]
 public class AIController : BaseCharacterController
 {
+    public event Action<string> AnimationNotified;
+    
     bool isMoveToCompleted = true;
     float moveToAcceptanceRadius;
     Vector3 moveToTargetPos;
@@ -20,8 +22,10 @@ public class AIController : BaseCharacterController
 
     AISense sense;
     NavMeshAgent agent;
+    WeaponComponent weapon;
 
     public AISense Sense => sense;
+    public WeaponComponent Weapon => weapon;
     public override float Height => agent.height;
     public override float Radius => agent.radius;
 
@@ -29,8 +33,9 @@ public class AIController : BaseCharacterController
     {
         base.Awake();
         
-        agent = GetComponent<NavMeshAgent>();
-        sense = GetComponent<AISense>();
+        agent  = GetComponent<NavMeshAgent>();
+        sense  = GetComponent<AISense>();
+        weapon = GetComponent<WeaponComponent>();
 
         agent.angularSpeed = 1000;
         agent.acceleration = 1000;
@@ -86,5 +91,10 @@ public class AIController : BaseCharacterController
         Action<MoveToResult> action = moveToCompleted;
         moveToCompleted = null;
         action?.Invoke(reason);
+    }
+
+    public void AnimationNotify(string notification)
+    {
+        AnimationNotified?.Invoke(notification);
     }
 }

@@ -21,12 +21,16 @@ public class PlayerController : BaseCharacterController
     protected override void Awake()
     {
         base.Awake();
+
+        Application.targetFrameRate = 10;
         
         characterController = GetComponent<CharacterController>();
         
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         Application.targetFrameRate = 30;
+
+        Damagable.HpChangedFromCharacter += (damage, character) => print($"Received {damage} damage from {character}");
     }
 
     void Update()

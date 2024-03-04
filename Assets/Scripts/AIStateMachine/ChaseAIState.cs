@@ -34,7 +34,18 @@ public class ChasingAIState : AIState
             if (AIController.Sense.Target != null)
             {
                 targetPos = AIController.Sense.Target.transform.position;
-                AIController.MoveTo(targetPos, HandleMoveToCompleted);
+
+                if (AIController.Weapon != null
+                    && AIController.Weapon.CanShoot()
+                    && Vector3.SqrMagnitude(AIController.transform.position - targetPos) 
+                    < AIController.Weapon.Radius * AIController.Weapon.Radius)
+                {
+                    ChangeState("Attack");
+                }
+                else
+                {
+                    AIController.MoveTo(targetPos, HandleMoveToCompleted);
+                }
             }
 
             yield return null;

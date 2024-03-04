@@ -223,8 +223,7 @@ MonoBehaviour:
   aim: {fileID: 0}
   audioSource: {fileID: 5487604102525915276}
   shootAudioClip: {fileID: 8300000, guid: 058e17f5484dd46e68a0365484e5ec67, type: 3}
-  shootVfxPrefab: {fileID: 0}
-  damage: 20
+  weapon: {fileID: 0}
 --- !u!114 &503912164922326385
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -249,7 +248,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.5
+  m_Radius: 0.6
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}

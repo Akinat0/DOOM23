@@ -25,6 +25,8 @@ public class AISense : MonoBehaviour
             if (target != value)
             {
                 target = value;
+                print($"TARGET CHANGED {target}");
+                Debug.Break();
                 TargetChanged?.Invoke(target);
                 return;
             }
@@ -61,7 +63,7 @@ public class AISense : MonoBehaviour
     {
         //Probably we should not update target if we already have a valid target
         //Also we need an opportunity to loose target at radius  
-        Target = DamagableManager.GetFirstVisibleTarget(searchTargets, transform, viewCone, viewDist);
+        Target = DamagableManager.GetFirstVisibleTarget(searchTargets, transform, viewCone, viewDist, Target != null);
 
         if (Target != null)
             return;

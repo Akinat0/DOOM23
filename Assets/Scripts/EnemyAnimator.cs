@@ -1,27 +1,29 @@
 
 using UnityEngine;
 
-[RequireComponent(typeof(AIController))]
+[RequireComponent(typeof(DemonAIController))]
 public class EnemyAnimator : MonoBehaviour
 {
     static readonly int SpeedId = Animator.StringToHash("Speed");
     static readonly int IsDeadId = Animator.StringToHash("IsDead");
+    static readonly int IsAttackingId = Animator.StringToHash("IsAttacking");
     
     Animator animator;
-    AIController controller;
+    DemonAIController controller;
 
     public Animator Animator => animator;
-    public AIController Controller => controller;
+    public DemonAIController Controller => controller;
 
     void Start()
     {
         animator = GetComponent<Animator>();
-        controller = GetComponent<AIController>();
+        controller = GetComponent<DemonAIController>();
     }
 
     void Update()
     {
         Animator.SetFloat(SpeedId, Controller.CurrentSpeed / Controller.MaxSpeed);
         Animator.SetBool(IsDeadId, controller.Damagable.IsDead);
+        Animator.SetBool(IsAttackingId, controller.CurrentState == "Attack");
     }
 }

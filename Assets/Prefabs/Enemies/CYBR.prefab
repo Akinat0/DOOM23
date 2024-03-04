@@ -39,6 +39,18 @@ PrefabInstance:
       propertyPath: m_StepOffset
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6802425838206786068, guid: df779c2df450c444591458f65163c845, type: 3}
+      propertyPath: cooldown
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6802425838206786068, guid: df779c2df450c444591458f65163c845, type: 3}
+      propertyPath: ammoCount
+      value: 999
+      objectReference: {fileID: 0}
+    - target: {fileID: 6802425838206786068, guid: df779c2df450c444591458f65163c845, type: 3}
+      propertyPath: shootVfxPrefab
+      value: 
+      objectReference: {fileID: 4785735751193477837, guid: f2e39fcc78fe74febb895e313a7135f7, type: 3}
     - target: {fileID: 7553576011108098769, guid: df779c2df450c444591458f65163c845, type: 3}
       propertyPath: m_Name
       value: CYBR

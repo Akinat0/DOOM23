@@ -12,7 +12,6 @@ public static class PhysicsUtility
         Ray ray = new Ray(origin, direction);
         int count = Physics.RaycastNonAlloc(ray, hitBuffer, maxDistance);
 
-
         if (count == 0)
         {
             return false;

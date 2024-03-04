@@ -1,4 +1,3 @@
-
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -23,8 +22,10 @@ public static class DamagableManager
         return damagableComponents.Where(damagable => (damagable.Affiliation & affiliation) != 0);
     }
 
-    public static DamagableComponent GetFirstVisibleTarget(Affiliation affiliation, Transform sourceTransform, float viewAngle, float maxDist)
+    public static DamagableComponent GetFirstVisibleTarget(Affiliation affiliation, Transform sourceTransform, float viewAngle, float maxDist, bool shouldCheck = false)
     {
+        var list = GetDamagablesByAffiliation(affiliation).ToList();
+        
         foreach(DamagableComponent enemy in GetDamagablesByAffiliation(affiliation))
         {
             Vector3 enemyDirection = enemy.transform.position - sourceTransform.position;
@@ -53,16 +54,30 @@ public static class DamagableManager
             }
         }
 
+        if (shouldCheck)
+        {
+            Debug.Log("CHECK FAILED");
+        }
+        
         return null;
     }
     
     static bool AimLineAttack(Vector3 sourcePos, Vector3 targetPos)
     {
+        
+        
         if (Physics.Linecast(sourcePos, targetPos, out RaycastHit hit)
             && hit.collider.GetComponent<DamagableComponent>())
         {
+            Debug.DrawLine(sourcePos, targetPos, Color.green);
+            
             return true;
         }
+        else
+        {
+            Debug.DrawLine(sourcePos, targetPos, Color.red);
+        }
+            
         
         return false;
     }
