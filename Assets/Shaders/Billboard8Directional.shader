@@ -127,6 +127,8 @@ Shader "Billboard/8 Directional"
                 
                 float angle = dot(vectorForward2D, cameraDir2D);
 
+                //sometimes Dot can return value outside of [-1, 1] range which fails Acos
+                angle = clamp(angle, -1, 1);
                 float angleRad = acos(angle);
 
                 float3 crossProduct = cross(
@@ -163,7 +165,7 @@ Shader "Billboard/8 Directional"
 
                 // 0.0625 = half of 1/8 direction
                 // + 1 is required because fmod seems to not work with negative values
-                float tileAngle = fmod(i.cameraAngle - 0.0625 + 1, 1); 
+                float tileAngle = fmod(i.cameraAngle - 0.0625 + 1, 1);
                 
                 float tile = floor(lerp(0, 8, 1 - tileAngle));
 

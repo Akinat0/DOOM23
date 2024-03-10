@@ -102,6 +102,9 @@ Shader "Billboard/5 Directional"
                 
                 float angle = dot(vectorForward2D, cameraDir2D);
 
+                //sometimes Dot can return value outside of [-1, 1] range which fails Acos
+                angle = clamp(angle, -1, 1);
+
                 float angleRad = acos(angle);
 
                 float3 crossProduct = cross(

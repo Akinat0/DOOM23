@@ -45,8 +45,12 @@ class PistolWeapon : WeaponComponent
 
                 //2D direction
                 direction.y = 0;
+
+                float dot = Vector3.Dot(direction.normalized, transform.forward);
                 
-                float dot = Mathf.Clamp01(Vector3.Dot(direction.normalized, transform.forward));
+                //For some reason Vector3.Dot can return value outside of [-1, 1] range. It fails Acos.
+                dot = Mathf.Clamp(dot, -1, 1);
+                
                 float acos = Mathf.Acos(dot);
                 float degree = acos * Mathf.Rad2Deg;
                 

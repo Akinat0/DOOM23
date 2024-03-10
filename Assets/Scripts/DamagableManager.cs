@@ -37,8 +37,8 @@ public static class DamagableManager
 
             float dot = Vector3.Dot(sourceTransform.forward, enemyDirection2D);
 
-            //For some reason Vector3.Dot can return value outside of [-1, 1] range 
-            dot = Mathf.Clamp01(dot);
+            //For some reason Vector3.Dot can return value outside of [-1, 1] range. It fails Acos
+            dot = Mathf.Clamp(dot, -1, 1);
             float angle = Mathf.Acos(dot) * Mathf.Rad2Deg;
 
             if(angle < viewAngle / 2)
