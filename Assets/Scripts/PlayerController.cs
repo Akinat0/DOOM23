@@ -1,10 +1,13 @@
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : BaseCharacterController
 {
     [SerializeField] float sensitivity = 10;
     [SerializeField] Camera playerCamera;
+    [SerializeField] UIVignette vignette;
     
     Vector3 surfaceNormal;
 
@@ -22,15 +25,31 @@ public class PlayerController : BaseCharacterController
     {
         base.Awake();
 
-        Application.targetFrameRate = 10;
-        
         characterController = GetComponent<CharacterController>();
         
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         Application.targetFrameRate = 30;
 
-        Damagable.HpChangedFromCharacter += (damage, character) => print($"Received {damage} damage from {character}");
+        Damagable.HpChangedFromCharacter += (damage, character) => print($"Received {damage} damage from {character}. Hp remains {Damagable.Hp}");
+        Damagable.HpChanged += HandleHpChanged;
+        Damagable.Died      += HandleDied;
+    }
+
+    void OnDestroy()
+    {
+        Damagable.HpChanged -= HandleHpChanged;
+        Damagable.Died      -= HandleDied;
+    }
+
+    void HandleDied()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    void HandleHpChanged(int hpDelta)
+    {
+        vignette.Flare(hpDelta > 0 ? new Color(0f, 1f, 0f, 0.8f) : new Color(1, 0, 0, 0.8f));
     }
 
     void Update()

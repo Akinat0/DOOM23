@@ -8,7 +8,7 @@
 //matrix operations 
 //https://gist.github.com/mattatz/86fff4b32d198d0928d0fa4ff32cf6fa
 
-//to demonstate matrices
+//to demonstrate matrices
 //matrixmultiplication.xyz 
 
 //documentation

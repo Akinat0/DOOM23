@@ -8,7 +8,7 @@ public class DamagableComponent : MonoBehaviour
 
     public event Action<int, BaseCharacterController> HpChangedFromCharacter;  
     public event Action<int> HpChanged;  
-    public event Action Killed;  
+    public event Action Died;  
 
     int currentHp;
     bool isDead;
@@ -34,8 +34,10 @@ public class DamagableComponent : MonoBehaviour
             if (isDead)
                 return;
 
+            int delta = value - currentHp;
             currentHp = Mathf.Max(value, 0);
-            HpChanged?.Invoke(currentHp);
+            
+            HpChanged?.Invoke(delta);
 
             if(currentHp <= 0)
                 Die();
@@ -60,7 +62,7 @@ public class DamagableComponent : MonoBehaviour
     {
         Debug.Log($"{gameObject.name} is dead");
         isDead = true;
-        Killed?.Invoke();
+        Died?.Invoke();
     }
 
     private void OnEnable()

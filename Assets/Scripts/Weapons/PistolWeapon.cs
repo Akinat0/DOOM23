@@ -45,7 +45,7 @@ class PistolWeapon : WeaponComponent
 
                 //2D direction
                 direction.y = 0;
-
+                
                 float dot = Vector3.Dot(direction.normalized, transform.forward);
                 
                 //For some reason Vector3.Dot can return value outside of [-1, 1] range. It fails Acos.
@@ -57,7 +57,8 @@ class PistolWeapon : WeaponComponent
                 return Mathf.Abs(degree) <= Angle;
 
             }
-            else return true;
+            
+            return true;
         }
 
         return false;
