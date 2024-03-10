@@ -25,7 +25,7 @@ public class PlayerShoot : MonoBehaviour
         if (!PhysicsUtility.RaycastIgnoreSelf(cameraTransform.position, cameraTransform.forward, transform, out RaycastHit hit)) 
             return;
         
-        if(!weapon.CanShoot())
+        if(!weapon.CanAttack())
             return;
         
         //probably check in children 
@@ -48,7 +48,7 @@ public class PlayerShoot : MonoBehaviour
             audioSource.PlayOneShot(shootAudioClip);
         }
     
-        weapon.Shoot(cameraTransform.position, cameraTransform.forward);
+        weapon.Attack(cameraTransform.position, cameraTransform.forward);
     }
     
     

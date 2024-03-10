@@ -1,21 +1,65 @@
 ﻿using UnityEngine;
+using UnityEngine.Rendering;
 
 class PistolWeapon : WeaponComponent
 {
     [SerializeField] GameObject shootVfxPrefab;
     [SerializeField] int damage = 10;
     [SerializeField] float cooldown = 1f;
+    [SerializeField] float radius = 10;
+    [SerializeField] float angle = 1;
+    [SerializeField] int ammoCount;
 
     public float Cooldown => cooldown;
-
+    
+    public int AmmoCount
+    {
+        get => ammoCount;
+        set => ammoCount = value;
+    }
+    
+    public float Radius
+    {
+        get => radius;
+        set => radius = value;
+    }
+    
+    public float Angle
+    {
+        get => angle;
+        set => angle = value;
+    }
+    
     float lastShootTime = float.MinValue;
     
-    public override bool CanShoot()
+    public override bool CanAttack(DamagableComponent target = null)
     {
-        return AmmoCount != 0 && (Cooldown <= 0 || Time.time - lastShootTime > Cooldown);
+        if (AmmoCount != 0 && (Cooldown <= 0 || Time.time - lastShootTime > Cooldown))
+        {
+            if (target != null)
+            {
+                Vector3 direction = target.transform.position - transform.position;
+
+                if (direction.sqrMagnitude > Radius * Radius)
+                    return false;
+
+                //2D direction
+                direction.y = 0;
+                
+                float dot = Mathf.Clamp01(Vector3.Dot(direction.normalized, transform.forward));
+                float acos = Mathf.Acos(dot);
+                float degree = acos * Mathf.Rad2Deg;
+                
+                return Mathf.Abs(degree) <= Angle;
+
+            }
+            else return true;
+        }
+
+        return false;
     }
 
-    public override void Shoot(Vector3 origin, Vector3 direction)
+    public override void Attack(Vector3 origin, Vector3 direction)
     {
         lastShootTime = Time.time;
         Debug.DrawLine(origin, origin + direction * 100, Color.blue, 10);
@@ -34,4 +78,23 @@ class PistolWeapon : WeaponComponent
 
         damagable.ApplyDamage(damage, Owner);
     }
+    
+#if UNITY_EDITOR
+
+    void OnDrawGizmosSelected()
+    {
+        Color handlesColor = UnityEditor.Handles.color;
+        CompareFunction handlesZTest = UnityEditor.Handles.zTest;
+        
+        UnityEditor.Handles.color = new Color(0.0f, 1, 0, 0.1f);
+        UnityEditor.Handles.zTest = CompareFunction.LessEqual;
+
+        //Draw touch radius
+        UnityEditor.Handles.DrawSolidDisc(transform.position, transform.up, Radius);
+        
+        UnityEditor.Handles.color = handlesColor;
+        UnityEditor.Handles.zTest = handlesZTest;
+        
+    }
+#endif
 }

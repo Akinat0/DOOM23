@@ -35,7 +35,7 @@ public class AttackAIState : AIState
     {
         Vector3 sourcePos = AIController.transform.position + new Vector3(0, AIController.Height / 2);
         Vector3 direction = Vector3.Normalize(cachedTargetPos - sourcePos);
-        AIController.Weapon.Shoot(sourcePos, direction);
+        AIController.Weapon.Attack(sourcePos, direction);
     }
     
 }

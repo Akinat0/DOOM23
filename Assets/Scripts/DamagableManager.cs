@@ -23,9 +23,7 @@ public static class DamagableManager
     }
 
     public static DamagableComponent GetFirstVisibleTarget(Affiliation affiliation, Transform sourceTransform, float viewAngle, float maxDist, bool shouldCheck = false)
-    {
-        var list = GetDamagablesByAffiliation(affiliation).ToList();
-        
+    {   
         foreach(DamagableComponent enemy in GetDamagablesByAffiliation(affiliation))
         {
             Vector3 enemyDirection = enemy.transform.position - sourceTransform.position;
@@ -37,7 +35,11 @@ public static class DamagableManager
             enemyDirection2D.y = 0;
             enemyDirection2D = enemyDirection2D.normalized;
 
-            float angle = Mathf.Acos(Vector3.Dot(sourceTransform.forward, enemyDirection2D)) * Mathf.Rad2Deg;
+            float dot = Vector3.Dot(sourceTransform.forward, enemyDirection2D);
+
+            //For some reason Vector3.Dot can return value outside of [-1, 1] range 
+            dot = Mathf.Clamp01(dot);
+            float angle = Mathf.Acos(dot) * Mathf.Rad2Deg;
 
             if(angle < viewAngle / 2)
             {
@@ -54,30 +56,15 @@ public static class DamagableManager
             }
         }
 
-        if (shouldCheck)
-        {
-            Debug.Log("CHECK FAILED");
-        }
         
         return null;
     }
     
     static bool AimLineAttack(Vector3 sourcePos, Vector3 targetPos)
     {
-        
-        
         if (Physics.Linecast(sourcePos, targetPos, out RaycastHit hit)
             && hit.collider.GetComponent<DamagableComponent>())
-        {
-            Debug.DrawLine(sourcePos, targetPos, Color.green);
-            
             return true;
-        }
-        else
-        {
-            Debug.DrawLine(sourcePos, targetPos, Color.red);
-        }
-            
         
         return false;
     }

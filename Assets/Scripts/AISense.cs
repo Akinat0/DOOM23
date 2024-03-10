@@ -25,8 +25,6 @@ public class AISense : MonoBehaviour
             if (target != value)
             {
                 target = value;
-                print($"TARGET CHANGED {target}");
-                Debug.Break();
                 TargetChanged?.Invoke(target);
                 return;
             }
