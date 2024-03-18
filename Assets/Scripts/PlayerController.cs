@@ -29,7 +29,7 @@ public class PlayerController : BaseCharacterController
         
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-        Application.targetFrameRate = 30;
+        Application.targetFrameRate = 120;
 
         Damagable.HpChangedFromCharacter += (damage, character) => print($"Received {damage} damage from {character}. Hp remains {Damagable.Hp}");
         Damagable.HpChanged += HandleHpChanged;

@@ -27,6 +27,10 @@ PrefabInstance:
       propertyPath: touchRadius
       value: 1.4
       objectReference: {fileID: 0}
+    - target: {fileID: 4048781901275825575, guid: df779c2df450c444591458f65163c845, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 22100000, guid: c864d89ab19925b45bbd24697876901c, type: 2}
     - target: {fileID: 4188826378660081827, guid: df779c2df450c444591458f65163c845, type: 3}
       propertyPath: maxSpeed
       value: 3
