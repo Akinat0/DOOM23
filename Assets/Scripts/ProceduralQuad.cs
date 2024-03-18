@@ -91,6 +91,8 @@ public class ProceduralQuad : MonoBehaviour
             ? meshRenderer.material 
             : meshRenderer.sharedMaterial;
         
+        if(material == null)
+            return;
         
         material.SetTexture(MainTex, texture);
         if (material.shader.name == "Billboard/Animated")
