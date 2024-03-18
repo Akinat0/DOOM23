@@ -7,33 +7,28 @@ public class UIVignette : MonoBehaviour
     [SerializeField] Image image;
     [SerializeField] AnimationCurve flareCurve;
 
-    IEnumerator currentRoutine; 
+    IEnumerator currentRoutine;
+
+    double flareTime = double.MinValue;
     
     public void Flare(Color color)
     {
-        if(currentRoutine != null)
-            StopCoroutine(currentRoutine);
-
-        StartCoroutine(currentRoutine = FlareRoutine(color));
+        image.color = color;
+        flareTime = Time.timeAsDouble;
+        Refresh();
     }
 
-    IEnumerator FlareRoutine(Color color)
+    void Update()
     {
-        image.color = color;
-        float time = 0;
+        Refresh();
+    }
 
-        float duration = flareCurve.keys[flareCurve.length - 1].time;
-
-        while (time < duration)
-        {
-            yield return null;
-            time += Time.deltaTime;
-            color.a = flareCurve.Evaluate(time);
-            image.color = color;
-        }
-        
-        color.a = flareCurve.Evaluate(duration);
+    void Refresh()
+    {
+        float animationTime = (float)(Time.timeAsDouble - flareTime);
+        float alpha = flareCurve.Evaluate(animationTime);
+        Color color = image.color;
+        color.a = alpha;
         image.color = color;
-        currentRoutine = null;
     }
 }
