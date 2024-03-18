@@ -14,5 +14,4 @@ public abstract class WeaponComponent : MonoBehaviour
     public abstract bool CanAttack(DamagableComponent target = null);
 
     public abstract void Attack(Vector3 origin, Vector3 direction);
-
 }

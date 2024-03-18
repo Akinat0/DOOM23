@@ -3,12 +3,12 @@ using UnityEngine.Rendering;
 
 class PistolWeapon : WeaponComponent
 {
-    [SerializeField] GameObject shootVfxPrefab;
     [SerializeField] int damage = 10;
     [SerializeField] float cooldown = 1f;
     [SerializeField] float radius = 10;
     [SerializeField] float angle = 1;
     [SerializeField] int ammoCount;
+    [SerializeField] int angleVariance = 1;
 
     public float Cooldown => cooldown;
     
@@ -66,6 +66,13 @@ class PistolWeapon : WeaponComponent
 
     public override void Attack(Vector3 origin, Vector3 direction)
     {
+        Quaternion variance = 
+            Quaternion.Euler(
+                (0.5f - Random.value) * angleVariance, 
+                (0.5f - Random.value) * angleVariance,
+                (0.5f - Random.value) * angleVariance);
+        
+        direction = variance * direction;
         lastShootTime = Time.time;
         Debug.DrawLine(origin, origin + direction * 100, Color.blue, 10);
 
@@ -76,8 +83,10 @@ class PistolWeapon : WeaponComponent
         if (!hit.collider.TryGetComponent(out DamagableComponent damagable))
         {
             //we've hit wall or something solid
-            if (shootVfxPrefab)
-                Instantiate(shootVfxPrefab, hit.point, Quaternion.identity);
+            GameObject vfx = GameScene.PuffFactory.Get();
+            vfx.transform.position = hit.point;
+            vfx.transform.rotation = Quaternion.identity;
+            
             return;
         }
 

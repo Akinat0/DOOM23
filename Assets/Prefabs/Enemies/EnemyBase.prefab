@@ -317,9 +317,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfdf25e4efac4babb12ad4886034a521, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shootVfxPrefab: {fileID: 0}
   damage: 10
   cooldown: 0
   radius: 10
   angle: 1
   ammoCount: 0
+  angleVariance: 1
