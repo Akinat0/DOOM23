@@ -79,5 +79,27 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6802425838206786068, guid: df779c2df450c444591458f65163c845, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: df779c2df450c444591458f65163c845, type: 3}
+--- !u!1 &8115620375468844741 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7553576011108098769, guid: df779c2df450c444591458f65163c845, type: 3}
+  m_PrefabInstance: {fileID: 1761972774328108052}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &226823702585254271
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8115620375468844741}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c92cb078fd40473d9545ce7ccb2f9004, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 10
+  angle: 60
+  radius: 1.5
+  cooldown: 0.5

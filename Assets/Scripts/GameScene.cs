@@ -6,13 +6,19 @@ public class GameScene : MonoBehaviour
 
     [SerializeField] PlayerController player;
     [SerializeField] PuffFactory puffFactory;
+    [SerializeField] UIVignette vignette;
 
-    public static PlayerController Player => instance != null ? instance.player : null; 
-    public static PuffFactory PuffFactory => instance != null ? instance.puffFactory : null; 
+    PlayerShoot playerShoot;
+    public static PlayerController Player => instance != null ? instance.player : null;
+    public static PlayerShoot PlayerShoot => instance != null ? instance.playerShoot : null;
+    public static PuffFactory PuffFactory => instance != null ? instance.puffFactory : null;
+    public static UIVignette Vignette => instance != null ? instance.vignette : null; 
 
     void Awake()
     {
         instance = this;
+
+        playerShoot = player.GetComponent<PlayerShoot>();
     }
 
     void OnDestroy()

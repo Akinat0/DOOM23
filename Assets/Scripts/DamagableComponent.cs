@@ -26,6 +26,7 @@ public class DamagableComponent : MonoBehaviour
 
     public bool IsDead => isDead;
 
+    public int MaxHp => hp;
     public int Hp
     {
         get => currentHp;

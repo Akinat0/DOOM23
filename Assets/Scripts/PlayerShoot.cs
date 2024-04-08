@@ -1,4 +1,8 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using Weapons;
 using Random = UnityEngine.Random;
 
 public class PlayerShoot : MonoBehaviour
@@ -6,16 +10,97 @@ public class PlayerShoot : MonoBehaviour
     [SerializeField] UIAim aim;
     [SerializeField] AudioSource audioSource;
     [SerializeField] AudioClip shootAudioClip;
-    [SerializeField] WeaponComponent weapon;
+    
+    List<WeaponComponent> weapons;
+    int weaponIndex;
 
+    public WeaponComponent Weapon => weapons[weaponIndex];
+    public IReadOnlyCollection<WeaponComponent> Weapons => weapons;
+
+    void Awake()
+    {
+        weapons = new List<WeaponComponent>();
+        
+        foreach (WeaponComponent weapon in GetComponents<WeaponComponent>())
+            weapons.Add(weapon);
+
+        AddWeapon(WeaponType.Melee);
+    }
 
     void Update()
     {
+        ProcessChangeWeapon();
         ProcessCanShoot();
         ProcessShootInput();
     }
 
+    public bool DoesContainsWeapon(WeaponType type)
+    {
+        return weapons.Any(weapon => weapon.Type == type);
+    }
+    
+    public bool AddWeapon(WeaponType type)
+    {
+        if (type == WeaponType.None)
+            return false;
 
+        if (DoesContainsWeapon(type))
+            return false;
+
+        WeaponComponent weapon;
+        
+        switch (type)
+        {
+            case WeaponType.Pistol:
+                weapon = gameObject.AddComponent<PistolWeapon>();
+                break;
+            case WeaponType.Shotgun:
+                weapon = gameObject.AddComponent<ShotgunWeapon>();
+                break;
+            case WeaponType.Melee:
+                weapon = gameObject.AddComponent<MeleeWeapon>();
+                break;
+            default:
+                throw new Exception(
+                    $"Weapon type {type} is not presented in PlayerShoot.AddWeapon's switch case. Please add it there.");
+        }
+        
+        weapons.Add(weapon);
+
+        return true;
+    }
+
+    void ProcessChangeWeapon()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1) && TrySelectWeapon(0))
+            return;
+        if (Input.GetKeyDown(KeyCode.Alpha2) && TrySelectWeapon(1))
+            return;
+        if (Input.GetKeyDown(KeyCode.Alpha3) && TrySelectWeapon(2))
+            return;
+        if (Input.GetKeyDown(KeyCode.Alpha4) && TrySelectWeapon(3))
+            return;
+        if (Input.GetKeyDown(KeyCode.Alpha5) && TrySelectWeapon(4))
+            return;
+        if (Input.GetKeyDown(KeyCode.Alpha6) && TrySelectWeapon(5))
+            return;
+        if (Input.GetKeyDown(KeyCode.Alpha7) && TrySelectWeapon(6))
+            return;
+        if (Input.GetKeyDown(KeyCode.Alpha8) && TrySelectWeapon(7))
+            return;
+        if (Input.GetKeyDown(KeyCode.Alpha9) && TrySelectWeapon(8))
+            return;
+    }
+
+    bool TrySelectWeapon(int index)
+    {
+        if (index < 0 || index >= weapons.Count)
+            return false;
+
+        weaponIndex = index;
+        return true;
+    }
+    
     void ProcessCanShoot()
     {
         Transform cameraTransform = GameScene.Player.Camera.transform;
@@ -25,7 +110,7 @@ public class PlayerShoot : MonoBehaviour
         if (!PhysicsUtility.RaycastIgnoreSelf(cameraTransform.position, cameraTransform.forward, transform, out RaycastHit hit)) 
             return;
         
-        if(!weapon.CanAttack())
+        if(!Weapon.CanAttack())
             return;
         
         //probably check in children 
@@ -48,8 +133,7 @@ public class PlayerShoot : MonoBehaviour
             audioSource.PlayOneShot(shootAudioClip);
         }
     
-        weapon.Attack(cameraTransform.position, cameraTransform.forward);
+        Weapon.Attack(cameraTransform.position, cameraTransform.forward);
     }
-    
     
 }

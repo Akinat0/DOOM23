@@ -1,22 +1,16 @@
 ﻿using UnityEngine;
 using UnityEngine.Rendering;
 
-class PistolWeapon : WeaponComponent
+class PistolWeapon : AmmoWeapon
 {
-    [SerializeField] int damage = 10;
+    [SerializeField] int   damage = 10;
     [SerializeField] float cooldown = 1f;
     [SerializeField] float radius = 10;
     [SerializeField] float angle = 1;
-    [SerializeField] int ammoCount;
-    [SerializeField] int angleVariance = 1;
+    
+    [SerializeField] int   angleVariance = 1;
 
     public float Cooldown => cooldown;
-    
-    public int AmmoCount
-    {
-        get => ammoCount;
-        set => ammoCount = value;
-    }
     
     public float Radius
     {
@@ -31,34 +25,35 @@ class PistolWeapon : WeaponComponent
     }
     
     float lastShootTime = float.MinValue;
-    
-    public override bool CanAttack(DamagableComponent target = null)
+
+    public override WeaponType Type => WeaponType.Pistol;
+
+    public override bool CanAttack()
     {
-        if (AmmoCount != 0 && (Cooldown <= 0 || Time.time - lastShootTime > Cooldown))
+        return (AmmoCount != 0 && (Cooldown <= 0 || Time.time - lastShootTime > Cooldown));
+    }
+    
+    public override bool CanAttackTarget(DamagableComponent target)
+    {
+        if (CanAttack() && target != null)
         {
-            if (target != null)
-            {
-                Vector3 direction = target.transform.position - transform.position;
+            Vector3 direction = target.transform.position - transform.position;
 
-                if (direction.sqrMagnitude > Radius * Radius)
-                    return false;
+            if (direction.sqrMagnitude > Radius * Radius)
+                return false;
 
-                //2D direction
-                direction.y = 0;
-                
-                float dot = Vector3.Dot(direction.normalized, transform.forward);
-                
-                //For some reason Vector3.Dot can return value outside of [-1, 1] range. It fails Acos.
-                dot = Mathf.Clamp(dot, -1, 1);
-                
-                float acos = Mathf.Acos(dot);
-                float degree = acos * Mathf.Rad2Deg;
-                
-                return Mathf.Abs(degree) <= Angle;
-
-            }
+            //2D direction
+            direction.y = 0;
             
-            return true;
+            float dot = Vector3.Dot(direction.normalized, transform.forward);
+            
+            //For some reason Vector3.Dot can return value outside of [-1, 1] range. It fails Acos.
+            dot = Mathf.Clamp(dot, -1, 1);
+            
+            float acos = Mathf.Acos(dot);
+            float degree = acos * Mathf.Rad2Deg;
+            
+            return Mathf.Abs(degree) <= Angle;
         }
 
         return false;
