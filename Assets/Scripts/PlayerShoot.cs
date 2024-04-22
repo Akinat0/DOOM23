@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Weapons;
 using Random = UnityEngine.Random;
 
 public class PlayerShoot : MonoBehaviour
@@ -47,24 +45,7 @@ public class PlayerShoot : MonoBehaviour
         if (DoesContainsWeapon(type))
             return false;
 
-        WeaponComponent weapon;
-        
-        switch (type)
-        {
-            case WeaponType.Pistol:
-                weapon = gameObject.AddComponent<PistolWeapon>();
-                break;
-            case WeaponType.Shotgun:
-                weapon = gameObject.AddComponent<ShotgunWeapon>();
-                break;
-            case WeaponType.Melee:
-                weapon = gameObject.AddComponent<MeleeWeapon>();
-                break;
-            default:
-                throw new Exception(
-                    $"Weapon type {type} is not presented in PlayerShoot.AddWeapon's switch case. Please add it there.");
-        }
-        
+        WeaponComponent weapon = WeaponHelper.AddWeapon(gameObject, type);
         weapons.Add(weapon);
 
         return true;

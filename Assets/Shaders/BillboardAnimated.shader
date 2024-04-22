@@ -36,8 +36,10 @@ Shader "Billboard/Animated"
 {
     Properties
     {
-        _MainTex ("Texture", 2D) = "white" {}
-        _Frame ("Frame", Int) = 0
+        _MainTex ("Texture", 2D)  = "white" {}
+        _Frame   ("Frame",   Int) = 0
+        _Width   ("Width",   Int) = 4
+        _Height  ("Height",  Int) = 4
     }
     SubShader
     {
@@ -81,7 +83,10 @@ Shader "Billboard/Animated"
 
             sampler2D _MainTex;
             float4 _MainTex_ST;
+
             float _Frame;
+            float _Width;
+            float _Height;
             
             v2f vert (appdata v)
             {
@@ -125,7 +130,7 @@ Shader "Billboard/Animated"
             fixed4 frag (v2f i) : SV_Target
             {
                 float2 uv;
-                Unity_Flipbook(i.uv, 4, 2, _Frame, float2(0, 1), uv);
+                Unity_Flipbook(i.uv, _Width, _Height, _Frame, float2(0, 1), uv);
                 
                 // sample the texture
                 fixed4 color = tex2D(_MainTex, uv);

@@ -154,6 +154,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxSpeed: 3
+  weaponType: 0
 --- !u!114 &3558008953873058818
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -223,6 +224,8 @@ MonoBehaviour:
   height: 2
   texture: {fileID: 2800000, guid: 104f3e6abc3164036a4b7f32793d3dcd, type: 3}
   frame: 0
+  rows: 2
+  columns: 4
 --- !u!23 &7166031133771792537
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -317,9 +320,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfdf25e4efac4babb12ad4886034a521, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ammoCount: 0
   damage: 10
   cooldown: 0
   radius: 10
   angle: 1
-  ammoCount: 0
   angleVariance: 1

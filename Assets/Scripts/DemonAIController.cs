@@ -7,6 +7,8 @@ public class DemonAIController : AIController
 
     public string CurrentState => stateMachine.ActiveStateName;
 
+    [SerializeField] WeaponType weaponType;
+
     void Start()
     {
         stateMachine = new AIStateMachine();
@@ -18,6 +20,10 @@ public class DemonAIController : AIController
         stateMachine.AddState("Damaged", new DamagedAIState(this, stateMachine));
         stateMachine.SetActiveState("Idle");
 
+        if (Weapon == null && weaponType != WeaponType.None)
+            Weapon = WeaponHelper.AddWeapon(gameObject, weaponType);
+        
+        
         Damagable.HpChangedFromCharacter += HandleHpChangedFromCharacter;
     }
 

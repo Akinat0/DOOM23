@@ -3,18 +3,15 @@ using UnityEngine;
 
 public class PuffFactory : PrefabFactory
 {
+    [SerializeField] float delay = 0.25f;
+    
     protected override void DoGet(GameObject element)
     {
         base.DoGet(element);
-        element.SetActive(true);
+        
         Coroutines.StartCoroutine(
-            Coroutines.Delay(0.25f, 
+            Coroutines.Delay(delay, 
                 () => Release(element)));
     }
 
-    protected override void DoRelease(GameObject element)
-    {
-        base.DoRelease(element);
-        element.SetActive(false);
-    }
 }

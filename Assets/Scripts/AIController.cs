@@ -20,12 +20,17 @@ public class AIController : BaseCharacterController
     Vector3 moveToTargetPos;
     Action<MoveToResult> moveToCompleted;
 
+    
+    WeaponComponent weapon;
     AISense sense;
     NavMeshAgent agent;
-    WeaponComponent weapon;
 
     public AISense Sense => sense;
-    public WeaponComponent Weapon => weapon;
+    public WeaponComponent Weapon 
+    { 
+        get => weapon;
+        protected set => weapon = value;
+    }
     public override float Height => agent.height;
     public override float Radius => agent.radius;
 

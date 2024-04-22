@@ -21,12 +21,12 @@ public class PrefabFactory : MonoBehaviour
     
     protected virtual void DoGet(GameObject element)
     {
-        
+        element.SetActive(true);
     }
     
     protected virtual void DoRelease(GameObject element)
     {
-        
+        element.SetActive(false);
     }
     
     protected virtual void DoDestroy(GameObject element)
@@ -45,7 +45,15 @@ public class PrefabFactory : MonoBehaviour
         Clear();
     }
 
-    public GameObject Get()
+
+
+    public GameObject Get() => Get(null, Vector3.zero, Quaternion.identity);
+    public GameObject Get(Transform parent) => Get(parent, Vector3.zero, Quaternion.identity);
+    public GameObject Get(Transform parent, Vector3 position) => Get(parent, position, Quaternion.identity);
+    public GameObject Get(Vector3 position) => Get(null, position, Quaternion.identity);
+    public GameObject Get(Vector3 position, Quaternion rotation) => Get(null, position, rotation);
+    
+    public GameObject Get(Transform parent, Vector3 position, Quaternion rotation)
     {
         GameObject element;
         if (Stack.Count == 0)
@@ -59,11 +67,23 @@ public class PrefabFactory : MonoBehaviour
         }
 
         DoGet(element);
+
+        element.transform.parent = parent;
+        element.transform.localPosition = position;
+        element.transform.rotation = rotation;
+        
         return element;
     }
 
     public TComp Get<TComp>() where TComp : Component => Get().GetComponent<TComp>();
+    public TComp Get<TComp>(Transform parent) where TComp : Component => Get(parent).GetComponent<TComp>();
+    public TComp Get<TComp>(Transform parent, Vector3 pos) where TComp : Component => Get(parent, pos).GetComponent<TComp>();
+    public TComp Get<TComp>(Transform parent, Vector3 pos, Quaternion rotation) where TComp : Component => Get(parent, pos, rotation).GetComponent<TComp>();
+    public TComp Get<TComp>(Vector3 pos) where TComp : Component => Get(pos).GetComponent<TComp>();
+    public TComp Get<TComp>(Vector3 pos, Quaternion rotation) where TComp : Component => Get(pos, rotation).GetComponent<TComp>();
 
+
+    public void Release(Component component) => Release(component.gameObject);
     public void Release(GameObject element)
     {
         if (Stack.Count > 0 && Stack.Contains(element))
@@ -74,7 +94,7 @@ public class PrefabFactory : MonoBehaviour
 
         DoRelease(element);
         
-        if (CountInactive < maxSize)
+        if (maxSize <= 0 || CountInactive < maxSize)
         {
             Stack.Push(element);
         }

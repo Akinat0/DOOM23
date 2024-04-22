@@ -5,8 +5,10 @@ using UnityEngine;
 [ExecuteAlways]
 public class ProceduralQuad : MonoBehaviour
 {
-    static readonly int MainTex = Shader.PropertyToID("_MainTex");
-    static readonly int Frame = Shader.PropertyToID("_Frame");
+    static readonly int MainTexProperty = Shader.PropertyToID("_MainTex");
+    static readonly int FrameProperty   = Shader.PropertyToID("_Frame");
+    static readonly int WidthProperty   = Shader.PropertyToID("_Width");
+    static readonly int HeightProperty  = Shader.PropertyToID("_Height");
     
     [SerializeField] Material targetMaterial;
     
@@ -16,7 +18,27 @@ public class ProceduralQuad : MonoBehaviour
     [SerializeField] Texture2D texture;
 
     [SerializeField] int frame;
+    [SerializeField] int rows = 2;
+    [SerializeField] int columns = 4;
 
+
+    public int Frame
+    {
+        get => frame;
+        set
+        {
+            if(frame == value)
+                return;
+            
+            frame = value;
+            Refresh();
+        }
+    }
+
+    void Awake()
+    {
+        Refresh();
+    }
 
     void OnDidApplyAnimationProperties()
     {
@@ -94,9 +116,14 @@ public class ProceduralQuad : MonoBehaviour
         if(material == null)
             return;
         
-        material.SetTexture(MainTex, texture);
+        material.SetTexture(MainTexProperty, texture);
+
         if (material.shader.name == "Billboard/Animated")
-            material.SetFloat(Frame, frame);
+        {
+            material.SetFloat(FrameProperty, frame);
+            material.SetFloat(WidthProperty, columns);
+            material.SetFloat(HeightProperty, rows);
+        }
         
     }
 }
