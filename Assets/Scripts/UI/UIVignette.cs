@@ -7,8 +7,6 @@ public class UIVignette : MonoBehaviour
     [SerializeField] Image image;
     [SerializeField] AnimationCurve flareCurve;
 
-    IEnumerator currentRoutine;
-
     double flareTime = double.MinValue;
     
     public void Flare(Color color)
