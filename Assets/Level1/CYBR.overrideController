@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: CYBR
+  m_Controller: {fileID: 9100000, guid: 478e7483e1c31214d8ae57e0a61db0a5, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 566707b5c5fab0548bdb5ecee07556f5, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 566707b5c5fab0548bdb5ecee07556f5, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 632d1b967ac1a9140b9eb3febda09533, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 632d1b967ac1a9140b9eb3febda09533, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 169f470fe1b2eed4f95c349af1d15642, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 169f470fe1b2eed4f95c349af1d15642, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: bfc62649618850c4ab426737e846e74f, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: bfc62649618850c4ab426737e846e74f, type: 2}

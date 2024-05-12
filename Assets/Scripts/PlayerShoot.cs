@@ -5,7 +5,6 @@ using Random = UnityEngine.Random;
 
 public class PlayerShoot : MonoBehaviour
 {
-    [SerializeField] UIAim aim;
     [SerializeField] AudioSource audioSource;
     [SerializeField] AudioClip shootAudioClip;
     
@@ -86,7 +85,7 @@ public class PlayerShoot : MonoBehaviour
     {
         Transform cameraTransform = GameScene.Player.Camera.transform;
 
-        aim.CanShoot = false;
+        GameScene.Aim.CanShoot = false;
         
         if (!PhysicsUtility.RaycastIgnoreSelf(cameraTransform.position, cameraTransform.forward, transform, out RaycastHit hit)) 
             return;
@@ -96,9 +95,9 @@ public class PlayerShoot : MonoBehaviour
         
         //probably check in children 
         if (hit.collider.TryGetComponent(out DamagableComponent damagable))
-            aim.CanShoot = !damagable.IsDead && ((damagable.Affiliation & Affiliation.Demons) != 0 || (damagable.Affiliation & Affiliation.Neutral) != 0);
+            GameScene.Aim.CanShoot = !damagable.IsDead && ((damagable.Affiliation & Affiliation.Demons) != 0 || (damagable.Affiliation & Affiliation.Neutral) != 0);
         else
-            aim.CanShoot = false;
+            GameScene.Aim.CanShoot = false;
     }
 
     void ProcessShootInput()
